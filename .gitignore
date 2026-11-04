@@ -17,3 +17,4 @@ results/logs/
 results/**/*.pt
 results/**/tokens.jsonl.gz
 *.log
+*.prev

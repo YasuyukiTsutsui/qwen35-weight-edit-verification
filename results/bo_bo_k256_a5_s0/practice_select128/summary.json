@@ -7,12 +7,12 @@
  "max_tokens": 16384,
  "preset": "qwen35_think",
  "thinking": 1,
- "acc": 0.44921875,
- "ok": 115,
+ "acc": 0.4609375,
+ "ok": 118,
  "total": 256,
- "cut_share": 0.484375,
- "cut_with_loop_tail": 56,
- "think_closed_share": 0.75,
- "mean_tokens": 12612.71484375,
- "gen_seconds": 24018
+ "cut_share": 0.46875,
+ "cut_with_loop_tail": 52,
+ "think_closed_share": 0.7734375,
+ "mean_tokens": 12536.95703125,
+ "gen_seconds": 828
 }

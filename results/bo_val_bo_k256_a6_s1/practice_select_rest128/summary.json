@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/bo_k256_a6",
+ "tag": "bo_val_bo_k256_a6_s1",
+ "set": "data/practice_select_rest128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.44921875,
+ "ok": 115,
+ "total": 256,
+ "cut_share": 0.3984375,
+ "cut_with_loop_tail": 47,
+ "think_closed_share": 0.8203125,
+ "mean_tokens": 12058.015625,
+ "gen_seconds": 844
+}
