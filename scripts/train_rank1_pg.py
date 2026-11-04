@@ -7,13 +7,19 @@ where pi_sampler is the SAMPLING distribution (presence penalty 1.5 -> temperatu
 gradient matches what the generator actually sampled from; C is a constant (no per-length normalisation). Problems whose
 samples all get the same reward have A = 0 and are skipped.
 Parameters (fp32): u_L (renormalised to unit norm in the forward pass) and v_L over a fixed set of columns S (top-256 by
-the direction finder's score); init = the own edit (k=64, alpha=12):  v_j = alpha * (u . W_j) for the top-64, 0 elsewhere.
+the direction finder's score); init = the own edit (top-64 columns, --alpha-init, default 5 = models/edits/bo_k64_a5, whose
+relative change 0.098/0.117 is inside the budget):  v_j = alpha * (u . W_j) for the top-64, 0 elsewhere. The samples must
+come from the model with this same initial edit, so that the first update is (nearly) on-policy.
 Budget: ||v|| / ||W||_F is projected to <= --rho-max after every step. Gradient clip 1.0. No weight decay toward 0.
+Each step uses a different batch of problems, all with samples from the initial policy (no importance ratio; the mean
+token log-prob drift against the saved vLLM log-probs is logged as a diagnostic).
 
-Modes:  check  (sampler log-probs vs vLLM's saved ones, hook vs generator)
-        bench  (forward+backward throughput / memory on real sequences)
-        train  (--rounds of steps over the data, exporting a checkpoint)
+Modes:  check  (sampler log-probs vs vLLM's saved ones, hook vs generator; exits non-zero if too many targets fall outside
+                the sampling support)
+        bench  (forward+backward throughput / memory on real sequences, with per-layer activation checkpointing)
+        train  (--steps steps, each on --problems-per-step problems; exports the edited checkpoint; saves u, v after each step)
     python3 scripts/train_rank1_pg.py --mode check --data results/pg_r0/practice_find
+Review of this file: reports/review_method_a.md (A-1 ... A-11).
 """
 import argparse
 import gzip
@@ -26,10 +32,10 @@ import sys
 import time
 
 import torch
+import torch.utils.checkpoint
 from safetensors.torch import load_file, save_file
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from find_direction import load_model  # noqa: E402
 
 TEMP, TOPK, TOPP, PRES = 0.6, 20, 0.95, 1.5
 LAYERS = (15, 19)
@@ -48,12 +54,15 @@ def sampler_logprobs(h, lm_head, y, chunk=256):
         pen = (first[None, :] < tpos[:, None]).float() * PRES
         z = z.index_copy(1, U, z[:, U] - pen)
         vals, idx = (z / TEMP).topk(TOPK, dim=-1)
-        p = torch.softmax(vals, -1)
-        keep = (p.cumsum(-1) - p) < TOPP
-        vals = vals.masked_fill(~keep, float("-inf"))
-        lp = torch.log_softmax(vals, -1)
-        hit = idx == yc[:, None]
-        return lp.masked_fill(~hit, float("-inf")).logsumexp(-1)
+        with torch.no_grad():                       # the support (top-p set) carries no gradient
+            p = torch.softmax(vals, -1)
+            keep = (p.cumsum(-1) - p) < TOPP
+        lp = torch.log_softmax(vals.masked_fill(~keep, float("-inf")), -1)
+        # y must be inside the top-k AND the top-p set. A logsumexp over an all -inf row has a NaN backward (review A-1),
+        # so pick the single finite entry with where() and return a constant -inf for rows where y is outside the support.
+        hit = (idx == yc[:, None]) & keep
+        val = torch.where(hit, lp, torch.zeros_like(lp)).sum(-1)
+        return torch.where(hit.any(-1), val, torch.full_like(val, float("-inf")))
 
     for c0 in range(0, L, chunk):
         c1 = min(L, c0 + chunk)
@@ -63,7 +72,7 @@ def sampler_logprobs(h, lm_head, y, chunk=256):
 
 
 class Rank1:
-    def __init__(self, layers, dirpath, k_mask=256, k_init=64, alpha_init=12.0):
+    def __init__(self, layers, dirpath, k_mask=256, k_init=64, alpha_init=5.0):
         U = torch.load(os.path.join(dirpath, "directions.pt")).float()
         info = json.load(open(os.path.join(dirpath, "direction.json")))
         self.p = {}
@@ -129,8 +138,12 @@ class Rank1:
                 log[ks[0]] = {"rel_change": float((new.double() - sd[ks[0]].double()).norm() / sd[ks[0]].double().norm())}
                 sd[ks[0]] = new.contiguous()
             save_file(sd, os.path.join(out_dir, sh), metadata={"format": "pt"})
+        assert len(log) == len(LAYERS), f"edited {list(log)} (expected layers {LAYERS})"      # review A-7
         json.dump(log, open(os.path.join(out_dir, "edit_log.json"), "w"), indent=1)
         return log
+
+    def state(self):
+        return {L: {"u": self.p[L]["u"].detach().cpu(), "v": self.p[L]["v"].detach().cpu(), "S": self.p[L]["S"].cpu()} for L in LAYERS}
 
 
 def load_data(path):
@@ -160,36 +173,59 @@ def main():
     ap.add_argument("--model", default="models/Qwen3.5-0.8B")
     ap.add_argument("--dir", default="results/qwen_dir")
     ap.add_argument("--data", required=True, help="dir with samples.jsonl.gz + tokens.jsonl.gz (eval_math --save-tokens 1)")
-    ap.add_argument("--max-len", type=int, default=8192)
+    ap.add_argument("--max-len", type=int, default=16384, help="response tokens kept; the samples were generated with a 16,384 cap, "
+                    "and loops are at the END of a sequence, so truncating below the cap drops the part that matters (review A-4)")
     ap.add_argument("--n", type=int, default=4, help="check/bench: number of sequences")
-    ap.add_argument("--steps", type=int, default=4)
-    ap.add_argument("--problems-per-step", type=int, default=6)
-    ap.add_argument("--lr-v", type=float, default=2e-3)
-    ap.add_argument("--lr-u", type=float, default=2e-4)
+    ap.add_argument("--steps", type=int, default=8)
+    ap.add_argument("--problems-per-step", type=int, default=12)
+    ap.add_argument("--min-samples", type=int, default=8, help="warn if a problem has fewer samples")
+    ap.add_argument("--lr-v", type=float, default=1e-2, help="with Adam each element moves by about lr per step; v's elements are ~0.25 rms")
+    ap.add_argument("--lr-u", type=float, default=5e-4, help="u's elements are ~0.03 rms")
+    ap.add_argument("--alpha-init", type=float, default=5.0, help="initial edit strength; must match the model the samples came from")
     ap.add_argument("--rho-max", type=float, default=0.12)
     ap.add_argument("--const", type=float, default=8192.0)
+    ap.add_argument("--no-ckpt", action="store_true", help="disable per-layer activation checkpointing (bench/train)")
     ap.add_argument("--out", default="models/edits/pg_r1")
     a = ap.parse_args()
 
+    from find_direction import load_model
     model, dec, _ = load_model(a.model)
     for q in model.parameters():
         q.requires_grad_(False)
     layers = dec.layers
-    r1 = Rank1(layers, a.dir)
+    r1 = Rank1(layers, a.dir, alpha_init=a.alpha_init)
+    print("initial relative change (before projection):", {L: round(float(r1.p[L]['v'].norm()) / r1.p[L]['Wnorm'], 4) for L in LAYERS}, flush=True)
     r1.attach(layers)
+    if a.mode != "check" and not a.no_ckpt:        # review A-2: recompute each decoder layer in the backward pass
+        try:
+            model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+            model.train()                           # checkpointing is only active in training mode; there is no dropout in this model
+            print("activation checkpointing: on", flush=True)
+        except Exception as e:                      # noqa: BLE001
+            print("WARNING: could not enable activation checkpointing:", e, flush=True)
     data = load_data(a.data)
     lm_head = model.lm_head
     print(f"{len(data)} sequences, mean reward {sum(d['reward'] for d in data) / len(data):.3f}", flush=True)
 
     if a.mode == "check":
-        for rec in sorted(data, key=lambda d: len(d["token_ids"]))[:a.n]:
+        # sequences of different lengths: the shortest, a middle one and the longest ones (review A-8)
+        srt = sorted(data, key=lambda d: len(d["token_ids"]))
+        pick = [srt[0], srt[len(srt) // 2]] + srt[::-1][:max(a.n - 2, 1)]
+        bad = False
+        for rec in pick:
             with torch.no_grad():
                 lp = seq_logp(dec, lm_head, rec, a.max_len).cpu()
             ref = torch.tensor(rec["logprobs"][:len(lp)])
             ok = torch.isfinite(lp)
             d = (lp[ok] - ref[ok])
-            print(f"len {len(lp)}: finite {ok.float().mean():.4f}  mean|diff| {d.abs().mean():.4f}  mean diff {d.mean():+.4f}  "
+            fin = float(ok.float().mean())
+            print(f"len {len(lp)}: finite {fin:.4f}  mean|diff| {d.abs().mean():.4f}  mean diff {d.mean():+.4f}  "
                   f"max|diff| {d.abs().max():.3f}  sum new {lp[ok].sum():.1f} vs vLLM {ref[ok].sum():.1f}", flush=True)
+            bad |= fin < 0.99 or float(d.abs().mean()) > 0.1
+        if bad:
+            print("CHECK FAILED: too many targets outside the sampling support (finite < 0.99) or mean|diff| > 0.1", flush=True)
+            sys.exit(2)
+        print("CHECK OK", flush=True)
         return
 
     if a.mode == "bench":
@@ -213,38 +249,57 @@ def main():
         groups.setdefault(d["id"], []).append(d)
     mixed = [g for g in groups.values() if len(g) >= 2 and 0 < sum(x["reward"] for x in g) < len(g)]
     print(f"problems {len(groups)}, with mixed rewards {len(mixed)}", flush=True)
+    short = [i for i, g in groups.items() if len(g) < a.min_samples]
+    if short:
+        print(f"WARNING: {len(short)} problems have fewer than {a.min_samples} samples (the leave-one-out baseline is noisy)", flush=True)
+    need = a.steps * a.problems_per_step
+    if len(mixed) < need:                           # review A-7: never "train" on nothing and export the initial edit as trained
+        sys.exit(f"not enough mixed-reward problems: {len(mixed)} < steps x problems-per-step = {need} "
+                 f"(needs >= 2 samples per problem and at least one right and one wrong answer)")
+    os.makedirs(a.out, exist_ok=True)
     opt = torch.optim.AdamW([{"params": [r1.p[L]["v"] for L in LAYERS], "lr": a.lr_v},
                              {"params": [r1.p[L]["u"] for L in LAYERS], "lr": a.lr_u}], betas=(0.9, 0.99), weight_decay=0.0)
     import random
     rnd = random.Random(0)
     rnd.shuffle(mixed)
     log = []
+    print("relative change at the start (after projection):", r1.project(a.rho_max), flush=True)
     for step in range(a.steps):
         batch = mixed[step * a.problems_per_step:(step + 1) * a.problems_per_step]
-        if not batch:
-            break
         opt.zero_grad()
         nseq = sum(len(g) for g in batch)
-        tot, drift = 0.0, []
+        tot, drift, n_tok, n_fin = 0.0, [], 0, 0
         for g in batch:
             R = torch.tensor([x["reward"] for x in g])
             for i, rec in enumerate(g):
                 adv = float(R[i] - (R.sum() - R[i]) / (len(g) - 1))
                 lp = seq_logp(dec, lm_head, rec, a.max_len)
                 ok = torch.isfinite(lp)
+                n_tok += len(lp)
+                n_fin += int(ok.sum())
                 loss = -adv * lp[ok].sum() / (nseq * a.const)
                 loss.backward()
                 tot += float(loss)
                 ref = torch.tensor(rec["logprobs"][:len(lp)], device=lp.device)
                 drift.append(float((lp[ok] - ref[ok]).mean()))
         gn = torch.nn.utils.clip_grad_norm_(r1.params(), 1.0)
+        entry = {"step": step, "loss": tot, "grad_norm": float(gn), "finite_token_share": n_fin / max(n_tok, 1),
+                 "mean_token_logp_drift": sum(drift) / len(drift)}
+        if not math.isfinite(float(gn)):            # review A-1: never step on a NaN gradient
+            entry["skipped"] = "non-finite gradient"
+            log.append(entry)
+            print(json.dumps(entry), flush=True)
+            continue
         opt.step()
-        rel = r1.project(a.rho_max)
-        log.append({"step": step, "loss": tot, "grad_norm": float(gn), "rel_change": rel, "mean_token_logp_drift": sum(drift) / len(drift)})
-        print(json.dumps(log[-1]), flush=True)
+        entry["rel_change"] = r1.project(a.rho_max)
+        log.append(entry)
+        print(json.dumps(entry), flush=True)
+        torch.save(r1.state(), os.path.join(a.out, "ckpt.pt"))     # review A-7: a crash must not lose the work
+        json.dump(log, open(os.path.join(a.out, "train_log.json"), "w"), indent=1)
+    if not any("skipped" not in e for e in log):
+        sys.exit("all steps were skipped (non-finite gradients); nothing exported")
     r1.detach()
     print(json.dumps(r1.export(a.model, a.out)))
-    json.dump(log, open(os.path.join(a.out, "train_log.json"), "w"), indent=1)
 
 
 if __name__ == "__main__":
