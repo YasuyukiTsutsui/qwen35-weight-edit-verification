@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Method A training (Issue #10), after everything else in queue_resume.sh. The check (sampler log-probs vs vLLM, mixed-reward
+# Method A training (Issue #10), after everything else in queue_resume.sh and queue_followup.sh. The check (sampler log-probs vs vLLM, mixed-reward
 # count 105 >= 96 needed) and the bench (16,384 tokens: 25 s forward+backward, 6.0 GiB peak) passed on 2026-11-05.
 #   1. train: 8 steps x 12 problems x 8 samples from the initial policy (results/pg_r0/practice_find160), AdamW, ~30 min per step
 #   2. evaluate the exported edit on the select problems (same protocol as method B) and on the validation problems
@@ -13,7 +13,7 @@ retry() {  # run in the GPU container; retry when the preflight check refuses to
   done
   return 1
 }
-while ! grep -q "RESUMEDONE" results/logs/queue_resume.out 2>/dev/null; do sleep 120; done
+while ! grep -q "FOLLOWDONE" results/logs/queue_followup.out 2>/dev/null; do sleep 120; done
 sleep 120
 retry results/logs/pg_train.log python3 scripts/train_rank1_pg.py --mode train --data results/pg_r0/practice_find160 --out models/edits/pg_r1 || { echo "A-TRAIN FAILED"; tail -n 8 results/logs/pg_train.log | cut -c1-240; exit 1; }
 tail -n 12 results/logs/pg_train.log | cut -c1-240

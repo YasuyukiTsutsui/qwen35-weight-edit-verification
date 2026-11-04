@@ -30,6 +30,9 @@ def main():
     ap.add_argument("--seed", type=int, default=0, help="seed of the random control direction")
     ap.add_argument("--random-cols", action="store_true",
                     help="control for the column choice: edit k RANDOM columns (seeded) instead of the top-k by score")
+    ap.add_argument("--rho", default=None,
+                    help="set alpha per layer so that the relative change ||dW||_F/||W||_F equals this (one value, or per layer like 15:0.16,19:0.175); "
+                         "overrides --alpha. Used to compare column choices / column counts at the SAME edit size")
     a = ap.parse_args()
     U = torch.load(os.path.join(a.dir, "directions.pt")).double()
     info = json.load(open(os.path.join(a.dir, "direction.json")))
@@ -39,6 +42,9 @@ def main():
     else:
         alphas = {L: float(a.alpha) for L in layers}
 
+    rhos = None
+    if a.rho is not None:
+        rhos = ({int(k): float(v) for k, v in (kv.split(":") for kv in a.rho.split(","))} if ":" in a.rho else {L: float(a.rho) for L in layers})
     os.makedirs(a.out, exist_ok=True)
     for f in os.listdir(a.base):
         p = os.path.join(a.base, f)
@@ -46,7 +52,7 @@ def main():
             shutil.copyfile(p, os.path.join(a.out, f))
     shards = sorted(f for f in os.listdir(a.base) if f.endswith(".safetensors"))
     log = {"base": a.base, "dir": a.dir, "layers": layers, "k": a.k, "alpha": alphas, "seed": a.seed, "norm_match": a.norm_match,
-           "random_control": a.random_control, "random_cols": a.random_cols, "tensors": {}}
+           "random_control": a.random_control, "random_cols": a.random_cols, "rho": a.rho, "tensors": {}}
     g = torch.Generator().manual_seed(a.seed)
     for sh in shards:
         sd = load_file(os.path.join(a.base, sh))
@@ -72,6 +78,8 @@ def main():
                 S = torch.tensor(info["layers"][L]["top_neurons"][:int(a.k)])
             WS = W[:, S]
             al = alphas[L]
+            if rhos is not None:
+                al = rhos[L] * float(W.norm()) / float((u @ WS).norm())  # ||dW||_F = alpha * ||W_S^T u||
             if a.random_control and a.norm_match:
                 al = al * float((u_real @ WS).norm() / (u @ WS).norm())
             W[:, S] = WS - al * torch.outer(u, u @ WS)

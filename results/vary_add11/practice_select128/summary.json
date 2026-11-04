@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/vary_add11",
+ "tag": "vary_add11",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.4296875,
+ "ok": 110,
+ "total": 256,
+ "cut_share": 0.47265625,
+ "cut_with_loop_tail": 94,
+ "think_closed_share": 0.79296875,
+ "mean_tokens": 12254.59765625,
+ "gen_seconds": 780
+}

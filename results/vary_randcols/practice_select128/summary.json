@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/vary_randcols",
+ "tag": "vary_randcols",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.14453125,
+ "ok": 37,
+ "total": 256,
+ "cut_share": 0.8671875,
+ "cut_with_loop_tail": 212,
+ "think_closed_share": 0.1328125,
+ "mean_tokens": 14864.7734375,
+ "gen_seconds": 1029
+}

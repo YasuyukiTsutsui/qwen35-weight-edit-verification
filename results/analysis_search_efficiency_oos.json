@@ -1,0 +1,99 @@
+{
+ "pool": [
+  "bo_bo_k128_a6_s0",
+  "bo_bo_k256_a4.5_s0"
+ ],
+ "full_acc": {
+  "bo_bo_k128_a6_s0": 0.4453125,
+  "bo_bo_k256_a4.5_s0": 0.44140625
+ },
+ "strategies": {
+  "S0 full": {
+   "cost_pct": 100.0,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S1 subsample m=8": {
+   "cost_pct": 6.23242756597521,
+   "regret_mean_pt": 0.1845703125,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S1 subsample m=16": {
+   "cost_pct": 12.507158047679798,
+   "regret_mean_pt": 0.1943359375,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S1 subsample m=32": {
+   "cost_pct": 25.001890229403507,
+   "regret_mean_pt": 0.1689453125,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S1 subsample m=64": {
+   "cost_pct": 49.95891552304603,
+   "regret_mean_pt": 0.16015625,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S2 halving from 8": {
+   "cost_pct": 53.14550370890389,
+   "regret_mean_pt": 0.193359375,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S2 halving from 16": {
+   "cost_pct": 56.249322862410736,
+   "regret_mean_pt": 0.181640625,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S3 label-free prefilter m=16": {
+   "cost_pct": 100.0,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S3 label-free prefilter m=32": {
+   "cost_pct": 100.0,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S3 label-free prefilter m=64": {
+   "cost_pct": 100.0,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S4 cap 2048": {
+   "cost_pct": 116.43822561408277,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S4 cap 4096": {
+   "cost_pct": 132.5416842801858,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  },
+  "S4 cap 8192": {
+   "cost_pct": 161.72719112177987,
+   "regret_mean_pt": 0.0,
+   "p_best_within_1pt": 1.0,
+   "p_top3": 1.0
+  }
+ },
+ "rank_corr_acc_at_cap_vs_full": {
+  "2048": 0.9999999999999999,
+  "4096": -0.9999999999999999,
+  "8192": -0.9999999999999999
+ },
+ "rank_corr_full_sample": {
+  "wellformed": 0.9999999999999999,
+  "closed_free_accuracy_proxy": 0.9999999999999999
+ }
+}
