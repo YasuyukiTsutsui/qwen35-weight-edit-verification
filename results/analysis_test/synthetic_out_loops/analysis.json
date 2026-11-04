@@ -1,0 +1,446 @@
+{
+ "meta": {
+  "set": "synth",
+  "base": "loop_base",
+  "cands": [
+   "loop_c"
+  ],
+  "n_problems": 3,
+  "bootstrap_B": 400,
+  "seed": 20261104,
+  "budgets": [
+   4096,
+   8192,
+   16384
+  ],
+  "interval": "95% percentile, problem-level cluster bootstrap",
+  "p_value": "two-sided; 2*(min(#{d*<=0},#{d*>=0})+1)/(B+1); Holm within each family",
+  "estimand": "pooled accuracy = correct samples / samples (ratio estimator over resampled problems)",
+  "family1": "primary: each candidate vs base",
+  "family1_m": 1,
+  "family2": "secondary: pairs (none)",
+  "family2_m": 0,
+  "elapsed_s": 0.4,
+  "peak_working_set_mb": 190.9,
+  "warnings": [],
+  "provenance": {
+   "script": "scripts/final_analysis.py",
+   "script_sha256": "c97022d1fe7a0f1f8318805267787cb77f98dcb30361968f6f240fb79de6184c",
+   "grade_py_sha256": "129cf63fdaca62dd99c22d3518e9dea2bc935bd2b511e4b5ca75ec31326cd781",
+   "python": "3.12.10",
+   "numpy": "2.4.4",
+   "argv": [
+    "--base",
+    "loop_base",
+    "--cands",
+    "loop_c",
+    "--set",
+    "synth",
+    "--out",
+    "C:\\Users\\pop_c\\git\\weight-space-programming\\results\\analysis_test\\synthetic_out_loops",
+    "--results-root",
+    "C:\\Users\\pop_c\\git\\weight-space-programming\\results\\analysis_test\\synthetic_root",
+    "--boot",
+    "400",
+    "--min-free-gb",
+    "0"
+   ],
+   "analyze_layer_choice_py_sha256": "b18d28b8faf9bdf60e4b8db6a7feb58f850b8fbaf25a64a91f3e8304c5ed1e6b",
+   "tokenizer_sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+  }
+ },
+ "runs": {
+  "loop_base": {
+   "label": "loop_base",
+   "samples_file": "loop_base/synth/samples.jsonl.gz",
+   "samples_sha256": "445a5c163e4bf827ae96bac89b5a972858ec19556043fce0d7f74ba4a712aa18",
+   "summary": {
+    "tag": "loop_base",
+    "max_tokens": 16384,
+    "preset": "qwen35_think",
+    "thinking": 1,
+    "gen_seconds": 1
+   },
+   "samples_per_problem": {
+    "min": 1,
+    "max": 1
+   },
+   "counts": {
+    "n_samples": 3,
+    "n_correct": 1,
+    "n_stop": 1,
+    "n_cut": 2,
+    "n_finish_other": 0,
+    "n_correct_but_cut": 0,
+    "n_correct_not_closed": 0,
+    "n_closed": 1,
+    "n_closed_correct": 1,
+    "n_closed_wrong": 0,
+    "closed_wrong_answered": 0,
+    "closed_wrong_no_boxed": 0,
+    "closed_wrong_cut_in_answer": 0,
+    "cut_verbatim_loop": 1,
+    "cut_other_repetition": 0,
+    "cut_no_repetition": 1,
+    "mean_tokens": 11922.666666666666
+   },
+   "metrics": {
+    "acc": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "budget_4096": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "budget_8192": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "budget_16384": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "closed": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "acc_given_closed": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "closed_wrong": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut": {
+     "est": 0.6666666666666666,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "cut_verbatim": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "cut_other_rep": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_none": {
+     "est": 0.3333333333333333,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    }
+   },
+   "loops": {
+    "n_cut": 2,
+    "by_period_bin": {
+     "6-12": 0,
+     "13-30": 1,
+     "31-100": 0,
+     "101-700": 0,
+     ">700": 0,
+     "undetected": 1
+    },
+    "by_flag_category_x_period_bin": {
+     "verbatim": {
+      "6-12": 0,
+      "13-30": 1,
+      "31-100": 0,
+      "101-700": 0,
+      ">700": 0,
+      "undetected": 0
+     },
+     "other_rep": {
+      "6-12": 0,
+      "13-30": 0,
+      "31-100": 0,
+      "101-700": 0,
+      ">700": 0,
+      "undetected": 0
+     },
+     "none": {
+      "6-12": 0,
+      "13-30": 0,
+      "31-100": 0,
+      "101-700": 0,
+      ">700": 0,
+      "undetected": 1
+     }
+    },
+    "n_detected": 1,
+    "period_median": 16.0,
+    "period_p10_p90": [
+     16.0,
+     16.0
+    ],
+    "onset_median": 70.0,
+    "onset_p10_p90": [
+     70.0,
+     70.0
+    ]
+   }
+  },
+  "loop_c": {
+   "label": "loop_c",
+   "samples_file": "loop_c/synth/samples.jsonl.gz",
+   "samples_sha256": "eeef44a00030a0358649d174f7ab4944d09fc3a270407926bcc9de69cf802f86",
+   "summary": {
+    "tag": "loop_c",
+    "max_tokens": 16384,
+    "preset": "qwen35_think",
+    "thinking": 1,
+    "gen_seconds": 1
+   },
+   "samples_per_problem": {
+    "min": 1,
+    "max": 1
+   },
+   "counts": {
+    "n_samples": 3,
+    "n_correct": 3,
+    "n_stop": 3,
+    "n_cut": 0,
+    "n_finish_other": 0,
+    "n_correct_but_cut": 0,
+    "n_correct_not_closed": 0,
+    "n_closed": 3,
+    "n_closed_correct": 3,
+    "n_closed_wrong": 0,
+    "closed_wrong_answered": 0,
+    "closed_wrong_no_boxed": 0,
+    "closed_wrong_cut_in_answer": 0,
+    "cut_verbatim_loop": 0,
+    "cut_other_repetition": 0,
+    "cut_no_repetition": 0,
+    "mean_tokens": 3000.0
+   },
+   "metrics": {
+    "acc": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "budget_4096": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "budget_8192": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "budget_16384": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "closed": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "acc_given_closed": {
+     "est": 1.0,
+     "ci95": [
+      1.0,
+      1.0
+     ]
+    },
+    "closed_wrong": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_verbatim": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_other_rep": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_none": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    }
+   },
+   "loops": {
+    "n_cut": 0,
+    "by_period_bin": {
+     "6-12": 0,
+     "13-30": 0,
+     "31-100": 0,
+     "101-700": 0,
+     ">700": 0,
+     "undetected": 0
+    },
+    "by_flag_category_x_period_bin": {
+     "verbatim": {
+      "6-12": 0,
+      "13-30": 0,
+      "31-100": 0,
+      "101-700": 0,
+      ">700": 0,
+      "undetected": 0
+     },
+     "other_rep": {
+      "6-12": 0,
+      "13-30": 0,
+      "31-100": 0,
+      "101-700": 0,
+      ">700": 0,
+      "undetected": 0
+     },
+     "none": {
+      "6-12": 0,
+      "13-30": 0,
+      "31-100": 0,
+      "101-700": 0,
+      ">700": 0,
+      "undetected": 0
+     }
+    },
+    "n_detected": 0
+   }
+  }
+ },
+ "family1_primary": [
+  {
+   "a": "loop_c",
+   "b": "loop_base",
+   "metric": "acc",
+   "diff": 0.6666666666666667,
+   "ci95": [
+    0.0,
+    1.0
+   ],
+   "ci_bonferroni": [
+    0.0,
+    1.0
+   ],
+   "p_boot": 0.07481296758104738,
+   "p_boot_recentred": 0.03740648379052369,
+   "acc_a": 1.0,
+   "acc_b": 0.3333333333333333,
+   "problems_a_better": 2,
+   "problems_b_better": 0,
+   "problems_tied": 1,
+   "p_holm": 0.07481296758104738
+  }
+ ],
+ "family2_secondary": [],
+ "descriptive_vs_base": {
+  "loop_c": {
+   "acc": {
+    "diff": 0.6666666666666667,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "budget_4096": {
+    "diff": 0.6666666666666667,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "budget_8192": {
+    "diff": 0.6666666666666667,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "budget_16384": {
+    "diff": 0.6666666666666667,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "closed": {
+    "diff": 0.6666666666666667,
+    "ci95": [
+     0.0,
+     1.0
+    ]
+   },
+   "closed_wrong": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "cut": {
+    "diff": -0.6666666666666666,
+    "ci95": [
+     -1.0,
+     0.0
+    ]
+   }
+  }
+ }
+}

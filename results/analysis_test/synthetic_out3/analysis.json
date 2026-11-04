@@ -1,0 +1,805 @@
+{
+ "meta": {
+  "set": "synth",
+  "base": "base",
+  "cands": [
+   "c1",
+   "c2dup",
+   "c3same"
+  ],
+  "n_problems": 10,
+  "bootstrap_B": 400,
+  "seed": 20261104,
+  "budgets": [
+   4096,
+   8192,
+   16384
+  ],
+  "interval": "95% percentile, problem-level cluster bootstrap",
+  "p_value": "two-sided; 2*(min(#{d*<=0},#{d*>=0})+1)/(B+1); Holm within each family",
+  "estimand": "pooled accuracy = correct samples / samples (ratio estimator over resampled problems)",
+  "family1": "primary: each candidate vs base",
+  "family1_m": 3,
+  "family2": "secondary: pairs c1-c2dup, c1-c3same, c2dup-c3same",
+  "family2_m": 3,
+  "elapsed_s": 0.0,
+  "peak_working_set_mb": 36.1,
+  "warnings": [],
+  "provenance": {
+   "script": "scripts/final_analysis.py",
+   "script_sha256": "c97022d1fe7a0f1f8318805267787cb77f98dcb30361968f6f240fb79de6184c",
+   "grade_py_sha256": "129cf63fdaca62dd99c22d3518e9dea2bc935bd2b511e4b5ca75ec31326cd781",
+   "python": "3.12.10",
+   "numpy": "2.4.4",
+   "argv": [
+    "--base",
+    "base",
+    "--cands",
+    "c1",
+    "c2dup",
+    "c3same",
+    "--set",
+    "synth",
+    "--out",
+    "C:\\Users\\pop_c\\git\\weight-space-programming\\results\\analysis_test\\synthetic_out3",
+    "--results-root",
+    "C:\\Users\\pop_c\\git\\weight-space-programming\\results\\analysis_test\\synthetic_root",
+    "--boot",
+    "400",
+    "--min-free-gb",
+    "0",
+    "--no-loops",
+    "--all-pairs"
+   ]
+  }
+ },
+ "runs": {
+  "base": {
+   "label": "base",
+   "samples_file": "base/synth/samples.jsonl.gz",
+   "samples_sha256": "558565498a31ac97bd7e4cdb8fe70b659bfbac87368de189fbf11649477d9cdc",
+   "summary": {
+    "tag": "base",
+    "max_tokens": 16384,
+    "preset": "qwen35_think",
+    "thinking": 1,
+    "gen_seconds": 1
+   },
+   "samples_per_problem": {
+    "min": 1,
+    "max": 1
+   },
+   "counts": {
+    "n_samples": 10,
+    "n_correct": 3,
+    "n_stop": 4,
+    "n_cut": 6,
+    "n_finish_other": 0,
+    "n_correct_but_cut": 1,
+    "n_correct_not_closed": 1,
+    "n_closed": 4,
+    "n_closed_correct": 2,
+    "n_closed_wrong": 2,
+    "closed_wrong_answered": 1,
+    "closed_wrong_no_boxed": 1,
+    "closed_wrong_cut_in_answer": 0,
+    "cut_verbatim_loop": 5,
+    "cut_other_repetition": 0,
+    "cut_no_repetition": 1,
+    "mean_tokens": 12130.4
+   },
+   "metrics": {
+    "acc": {
+     "est": 0.3,
+     "ci95": [
+      0.1,
+      0.6
+     ]
+    },
+    "budget_4096": {
+     "est": 0.1,
+     "ci95": [
+      0.0,
+      0.3
+     ]
+    },
+    "budget_8192": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4
+     ]
+    },
+    "budget_16384": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4
+     ]
+    },
+    "closed": {
+     "est": 0.4,
+     "ci95": [
+      0.19750000000000087,
+      0.7
+     ]
+    },
+    "acc_given_closed": {
+     "est": 0.5,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "closed_wrong": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.5
+     ]
+    },
+    "cut": {
+     "est": 0.6,
+     "ci95": [
+      0.3,
+      0.8024999999999978
+     ]
+    },
+    "cut_verbatim": {
+     "est": 0.5,
+     "ci95": [
+      0.2,
+      0.8
+     ]
+    },
+    "cut_other_rep": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_none": {
+     "est": 0.1,
+     "ci95": [
+      0.0,
+      0.3
+     ]
+    }
+   }
+  },
+  "c1": {
+   "label": "c1",
+   "samples_file": "c1/synth/samples.jsonl.gz",
+   "samples_sha256": "779255997a6e199a9d36af79ecc174502fc81f3f3a769cd77fde881597a68e6f",
+   "summary": {
+    "tag": "c1",
+    "max_tokens": 16384,
+    "preset": "qwen35_think",
+    "thinking": 1,
+    "gen_seconds": 1
+   },
+   "samples_per_problem": {
+    "min": 1,
+    "max": 2
+   },
+   "counts": {
+    "n_samples": 15,
+    "n_correct": 10,
+    "n_stop": 12,
+    "n_cut": 3,
+    "n_finish_other": 0,
+    "n_correct_but_cut": 0,
+    "n_correct_not_closed": 0,
+    "n_closed": 13,
+    "n_closed_correct": 10,
+    "n_closed_wrong": 3,
+    "closed_wrong_answered": 2,
+    "closed_wrong_no_boxed": 0,
+    "closed_wrong_cut_in_answer": 1,
+    "cut_verbatim_loop": 1,
+    "cut_other_repetition": 1,
+    "cut_no_repetition": 1,
+    "mean_tokens": 9210.133333333333
+   },
+   "metrics": {
+    "acc": {
+     "est": 0.6666666666666666,
+     "ci95": [
+      0.375,
+      0.9285714285714286
+     ]
+    },
+    "budget_4096": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.3333333333333333
+     ]
+    },
+    "budget_8192": {
+     "est": 0.26666666666666666,
+     "ci95": [
+      0.08333333333333333,
+      0.4117647058823529
+     ]
+    },
+    "budget_16384": {
+     "est": 0.6666666666666666,
+     "ci95": [
+      0.375,
+      0.9285714285714286
+     ]
+    },
+    "closed": {
+     "est": 0.8666666666666667,
+     "ci95": [
+      0.6,
+      1.0
+     ]
+    },
+    "acc_given_closed": {
+     "est": 0.7692307692307693,
+     "ci95": [
+      0.5,
+      1.0
+     ]
+    },
+    "closed_wrong": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4121848739495794
+     ]
+    },
+    "cut": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.47058823529411764
+     ]
+    },
+    "cut_verbatim": {
+     "est": 0.06666666666666667,
+     "ci95": [
+      0.0,
+      0.2
+     ]
+    },
+    "cut_other_rep": {
+     "est": 0.06666666666666667,
+     "ci95": [
+      0.0,
+      0.1875
+     ]
+    },
+    "cut_none": {
+     "est": 0.06666666666666667,
+     "ci95": [
+      0.0,
+      0.2
+     ]
+    }
+   }
+  },
+  "c2dup": {
+   "label": "c2dup",
+   "samples_file": "c2dup/synth/samples.jsonl.gz",
+   "samples_sha256": "998385ba09371c41fd02ea2ace60938a4c9363d257dd262dcded115e09e7696f",
+   "summary": {
+    "tag": "c2dup",
+    "max_tokens": 16384,
+    "preset": "qwen35_think",
+    "thinking": 1,
+    "gen_seconds": 1
+   },
+   "samples_per_problem": {
+    "min": 2,
+    "max": 2
+   },
+   "counts": {
+    "n_samples": 20,
+    "n_correct": 6,
+    "n_stop": 8,
+    "n_cut": 12,
+    "n_finish_other": 0,
+    "n_correct_but_cut": 2,
+    "n_correct_not_closed": 2,
+    "n_closed": 8,
+    "n_closed_correct": 4,
+    "n_closed_wrong": 4,
+    "closed_wrong_answered": 2,
+    "closed_wrong_no_boxed": 2,
+    "closed_wrong_cut_in_answer": 0,
+    "cut_verbatim_loop": 10,
+    "cut_other_repetition": 0,
+    "cut_no_repetition": 2,
+    "mean_tokens": 12130.4
+   },
+   "metrics": {
+    "acc": {
+     "est": 0.3,
+     "ci95": [
+      0.1,
+      0.6
+     ]
+    },
+    "budget_4096": {
+     "est": 0.1,
+     "ci95": [
+      0.0,
+      0.3
+     ]
+    },
+    "budget_8192": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4
+     ]
+    },
+    "budget_16384": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4
+     ]
+    },
+    "closed": {
+     "est": 0.4,
+     "ci95": [
+      0.19750000000000087,
+      0.7
+     ]
+    },
+    "acc_given_closed": {
+     "est": 0.5,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "closed_wrong": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.5
+     ]
+    },
+    "cut": {
+     "est": 0.6,
+     "ci95": [
+      0.3,
+      0.8024999999999978
+     ]
+    },
+    "cut_verbatim": {
+     "est": 0.5,
+     "ci95": [
+      0.2,
+      0.8
+     ]
+    },
+    "cut_other_rep": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_none": {
+     "est": 0.1,
+     "ci95": [
+      0.0,
+      0.3
+     ]
+    }
+   }
+  },
+  "c3same": {
+   "label": "c3same",
+   "samples_file": "c3same/synth/samples.jsonl.gz",
+   "samples_sha256": "558565498a31ac97bd7e4cdb8fe70b659bfbac87368de189fbf11649477d9cdc",
+   "summary": {
+    "tag": "c3same",
+    "max_tokens": 16384,
+    "preset": "qwen35_think",
+    "thinking": 1,
+    "gen_seconds": 1
+   },
+   "samples_per_problem": {
+    "min": 1,
+    "max": 1
+   },
+   "counts": {
+    "n_samples": 10,
+    "n_correct": 3,
+    "n_stop": 4,
+    "n_cut": 6,
+    "n_finish_other": 0,
+    "n_correct_but_cut": 1,
+    "n_correct_not_closed": 1,
+    "n_closed": 4,
+    "n_closed_correct": 2,
+    "n_closed_wrong": 2,
+    "closed_wrong_answered": 1,
+    "closed_wrong_no_boxed": 1,
+    "closed_wrong_cut_in_answer": 0,
+    "cut_verbatim_loop": 5,
+    "cut_other_repetition": 0,
+    "cut_no_repetition": 1,
+    "mean_tokens": 12130.4
+   },
+   "metrics": {
+    "acc": {
+     "est": 0.3,
+     "ci95": [
+      0.1,
+      0.6
+     ]
+    },
+    "budget_4096": {
+     "est": 0.1,
+     "ci95": [
+      0.0,
+      0.3
+     ]
+    },
+    "budget_8192": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4
+     ]
+    },
+    "budget_16384": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.4
+     ]
+    },
+    "closed": {
+     "est": 0.4,
+     "ci95": [
+      0.19750000000000087,
+      0.7
+     ]
+    },
+    "acc_given_closed": {
+     "est": 0.5,
+     "ci95": [
+      0.0,
+      1.0
+     ]
+    },
+    "closed_wrong": {
+     "est": 0.2,
+     "ci95": [
+      0.0,
+      0.5
+     ]
+    },
+    "cut": {
+     "est": 0.6,
+     "ci95": [
+      0.3,
+      0.8024999999999978
+     ]
+    },
+    "cut_verbatim": {
+     "est": 0.5,
+     "ci95": [
+      0.2,
+      0.8
+     ]
+    },
+    "cut_other_rep": {
+     "est": 0.0,
+     "ci95": [
+      0.0,
+      0.0
+     ]
+    },
+    "cut_none": {
+     "est": 0.1,
+     "ci95": [
+      0.0,
+      0.3
+     ]
+    }
+   }
+  }
+ },
+ "family1_primary": [
+  {
+   "a": "c1",
+   "b": "base",
+   "metric": "acc",
+   "diff": 0.36666666666666664,
+   "ci95": [
+    0.07488970588235298,
+    0.6698076923076919
+   ],
+   "ci_bonferroni": [
+    0.012003676470588219,
+    0.7333333333333334
+   ],
+   "p_boot": 0.0199501246882793,
+   "p_boot_recentred": 0.022443890274314215,
+   "acc_a": 0.6666666666666666,
+   "acc_b": 0.3,
+   "problems_a_better": 5,
+   "problems_b_better": 1,
+   "problems_tied": 4,
+   "p_holm": 0.059850374064837904
+  },
+  {
+   "a": "c2dup",
+   "b": "base",
+   "metric": "acc",
+   "diff": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "ci_bonferroni": [
+    0.0,
+    0.0
+   ],
+   "p_boot": 1.0,
+   "p_boot_recentred": 1.0,
+   "acc_a": 0.3,
+   "acc_b": 0.3,
+   "problems_a_better": 0,
+   "problems_b_better": 0,
+   "problems_tied": 10,
+   "p_holm": 1.0
+  },
+  {
+   "a": "c3same",
+   "b": "base",
+   "metric": "acc",
+   "diff": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "ci_bonferroni": [
+    0.0,
+    0.0
+   ],
+   "p_boot": 1.0,
+   "p_boot_recentred": 1.0,
+   "acc_a": 0.3,
+   "acc_b": 0.3,
+   "problems_a_better": 0,
+   "problems_b_better": 0,
+   "problems_tied": 10,
+   "p_holm": 1.0
+  }
+ ],
+ "family2_secondary": [
+  {
+   "a": "c1",
+   "b": "c2dup",
+   "metric": "acc",
+   "diff": 0.36666666666666664,
+   "ci95": [
+    0.07488970588235298,
+    0.6698076923076919
+   ],
+   "ci_bonferroni": [
+    0.012003676470588219,
+    0.7333333333333334
+   ],
+   "p_boot": 0.0199501246882793,
+   "p_boot_recentred": 0.022443890274314215,
+   "acc_a": 0.6666666666666666,
+   "acc_b": 0.3,
+   "problems_a_better": 5,
+   "problems_b_better": 1,
+   "problems_tied": 4,
+   "p_holm": 0.059850374064837904
+  },
+  {
+   "a": "c1",
+   "b": "c3same",
+   "metric": "acc",
+   "diff": 0.36666666666666664,
+   "ci95": [
+    0.07488970588235298,
+    0.6698076923076919
+   ],
+   "ci_bonferroni": [
+    0.012003676470588219,
+    0.7333333333333334
+   ],
+   "p_boot": 0.0199501246882793,
+   "p_boot_recentred": 0.022443890274314215,
+   "acc_a": 0.6666666666666666,
+   "acc_b": 0.3,
+   "problems_a_better": 5,
+   "problems_b_better": 1,
+   "problems_tied": 4,
+   "p_holm": 0.059850374064837904
+  },
+  {
+   "a": "c2dup",
+   "b": "c3same",
+   "metric": "acc",
+   "diff": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "ci_bonferroni": [
+    0.0,
+    0.0
+   ],
+   "p_boot": 1.0,
+   "p_boot_recentred": 1.0,
+   "acc_a": 0.3,
+   "acc_b": 0.3,
+   "problems_a_better": 0,
+   "problems_b_better": 0,
+   "problems_tied": 10,
+   "p_holm": 1.0
+  }
+ ],
+ "descriptive_vs_base": {
+  "c1": {
+   "acc": {
+    "diff": 0.36666666666666664,
+    "ci95": [
+     0.07488970588235298,
+     0.6698076923076919
+    ]
+   },
+   "budget_4096": {
+    "diff": 0.1,
+    "ci95": [
+     -0.08243697478991595,
+     0.2857142857142857
+    ]
+   },
+   "budget_8192": {
+    "diff": 0.06666666666666665,
+    "ci95": [
+     -0.10604779411764702,
+     0.2337499999999996
+    ]
+   },
+   "budget_16384": {
+    "diff": 0.4666666666666666,
+    "ci95": [
+     0.11249999999999999,
+     0.8181818181818182
+    ]
+   },
+   "closed": {
+    "diff": 0.4666666666666667,
+    "ci95": [
+     0.15000000000000002,
+     0.7349999999999985
+    ]
+   },
+   "closed_wrong": {
+    "diff": 0.0,
+    "ci95": [
+     -0.24642857142857136,
+     0.23529411764705882
+    ]
+   },
+   "cut": {
+    "diff": -0.39999999999999997,
+    "ci95": [
+     -0.7286904761904762,
+     -0.014206349206349283
+    ]
+   }
+  },
+  "c2dup": {
+   "acc": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "budget_4096": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "budget_8192": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "budget_16384": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "closed": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "closed_wrong": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "cut": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  "c3same": {
+   "acc": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "budget_4096": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "budget_8192": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "budget_16384": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "closed": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "closed_wrong": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "cut": {
+    "diff": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   }
+  }
+ }
+}
