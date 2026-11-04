@@ -40,5 +40,19 @@
   "info": {
    "phase": "init"
   }
+ },
+ {
+  "alpha": 6.5,
+  "k": 64,
+  "tag": "bo_bo_k64_a6.5_s0",
+  "ok": 107,
+  "n_seq": 256,
+  "acc": 0.41796875,
+  "loops": 60,
+  "closed": 177,
+  "gen_seconds": 795,
+  "info": {
+   "phase": "init"
+  }
  }
 ]

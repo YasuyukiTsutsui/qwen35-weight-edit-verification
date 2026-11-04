@@ -87,6 +87,7 @@ def main():
     ap.add_argument("--rho", type=float, default=0.08)
     ap.add_argument("--k", type=int, default=64)
     ap.add_argument("--pre", type=int, default=768)
+    ap.add_argument("--skip-scan", action="store_true", help="only build and save the direction (no published-edit recovery, no teacher-forced scan)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -176,6 +177,10 @@ def main():
         top_new.append(top[:a.k].cpu())
     torch.save(torch.stack(U_new), os.path.join(a.out, "directions.pt"))
     json.dump(res, open(os.path.join(a.out, "direction.json"), "w"))
+    if a.skip_scan:
+        print(f"direction built from {N} training loops -> {a.out}", flush=True)
+        print("DONE")
+        return
 
     # ---- published edit: recover u and columns for layers 15, 19
     pub = {}
