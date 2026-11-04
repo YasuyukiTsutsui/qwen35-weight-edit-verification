@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/w2_L15h3_x2",
+ "tag": "wo_w2_L15h3_x2",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.0,
+ "ok": 0,
+ "total": 256,
+ "cut_share": 1.0,
+ "cut_with_loop_tail": 253,
+ "think_closed_share": 0.0,
+ "mean_tokens": 16384.0,
+ "gen_seconds": 1182
+}
