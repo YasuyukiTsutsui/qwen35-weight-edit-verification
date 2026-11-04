@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/null_k256_a6_s1",
+ "tag": "null_k256_a6_s1",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.19140625,
+ "ok": 49,
+ "total": 256,
+ "cut_share": 0.80859375,
+ "cut_with_loop_tail": 189,
+ "think_closed_share": 0.1953125,
+ "mean_tokens": 14043.15234375,
+ "gen_seconds": 1003
+}
