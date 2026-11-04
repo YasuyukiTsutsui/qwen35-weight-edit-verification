@@ -47,12 +47,12 @@ def load(tag):
     return by
 
 
-def build_pool(exclude=frozenset()):
+def build_pool(exclude=frozenset(), exclude_prefix=()):
     tags, per = [], {}
     for sp in sorted(glob.glob(os.path.join(ROOT, "results", "*", "practice_select128", "summary.json"))):
         s = json.load(open(sp))
         tag = sp.split(os.sep)[-3]
-        if s.get("max_tokens") != 16384 or "base" in tag or tag in exclude:
+        if s.get("max_tokens") != 16384 or "base" in tag or tag in exclude or tag.startswith(exclude_prefix):
             continue
         by = load(tag)
         if any(len(v) != 2 for v in by.values()):
@@ -79,7 +79,7 @@ def main():
     oos = "--oos" in sys.argv
     frozen_path = os.path.join(ROOT, "results", "search_efficiency_pool_v1.json")
     if oos:
-        tags, ids, corr, tok, wf = build_pool(set(json.load(open(frozen_path))["pool"]))
+        tags, ids, corr, tok, wf = build_pool(set(json.load(open(frozen_path))["pool"]), ("null_",))  # null-control edits were not in the pre-registered list
         print("OUT-OF-SAMPLE pool (edits not in pool v1)")
     else:
         tags, ids, corr, tok, wf = build_pool()
