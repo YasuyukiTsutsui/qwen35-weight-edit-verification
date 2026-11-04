@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/x_L10_14_rand_r12",
+ "tag": "ext_x_L10_14_rand_r12",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.12890625,
+ "ok": 33,
+ "total": 256,
+ "cut_share": 0.87890625,
+ "cut_with_loop_tail": 216,
+ "think_closed_share": 0.125,
+ "mean_tokens": 14957.7109375,
+ "gen_seconds": 1080
+}

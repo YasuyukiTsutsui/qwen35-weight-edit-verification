@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/x_n16_L15_19_r12",
+ "tag": "ext_x_n16_L15_19_r12",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.31640625,
+ "ok": 81,
+ "total": 256,
+ "cut_share": 0.6484375,
+ "cut_with_loop_tail": 127,
+ "think_closed_share": 0.4296875,
+ "mean_tokens": 13585.1328125,
+ "gen_seconds": 889
+}
