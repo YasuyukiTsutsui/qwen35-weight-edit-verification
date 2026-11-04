@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/qwen_rand",
+ "tag": "quick_qwen_rand",
+ "set": "gsm8k_test",
+ "n_problems": 64,
+ "samples": 1,
+ "max_tokens": 8192,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.203125,
+ "ok": 13,
+ "total": 64,
+ "cut_share": 0.8125,
+ "cut_with_loop_tail": 44,
+ "think_closed_share": 0.1875,
+ "mean_tokens": 7528.015625,
+ "gen_seconds": 92
+}

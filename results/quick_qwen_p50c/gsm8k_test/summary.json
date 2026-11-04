@@ -1,0 +1,18 @@
+{
+ "model": "models/Qwen3.5-0.8B-p50c",
+ "tag": "quick_qwen_p50c",
+ "set": "gsm8k_test",
+ "n_problems": 64,
+ "samples": 1,
+ "max_tokens": 8192,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.328125,
+ "ok": 21,
+ "total": 64,
+ "cut_share": 0.625,
+ "cut_with_loop_tail": 4,
+ "think_closed_share": 0.453125,
+ "mean_tokens": 7122.4375,
+ "gen_seconds": 87
+}

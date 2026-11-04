@@ -1,0 +1,18 @@
+{
+ "model": "models/Qwen3.5-0.8B",
+ "tag": "sweep_base",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 1,
+ "max_tokens": 8192,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.109375,
+ "ok": 14,
+ "total": 128,
+ "cut_share": 0.8984375,
+ "cut_with_loop_tail": 84,
+ "think_closed_share": 0.1015625,
+ "mean_tokens": 7674.9453125,
+ "gen_seconds": 174
+}

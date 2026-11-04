@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/t1_L10_r12",
+ "tag": "scr_t1_L10_r12",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.21875,
+ "ok": 56,
+ "total": 256,
+ "cut_share": 0.765625,
+ "cut_with_loop_tail": 182,
+ "think_closed_share": 0.3046875,
+ "mean_tokens": 14151.54296875,
+ "gen_seconds": 959
+}

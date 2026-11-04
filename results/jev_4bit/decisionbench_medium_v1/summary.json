@@ -1,0 +1,16 @@
+{
+ "tag": "jev_4bit",
+ "subset": "medium",
+ "fmt": "v1",
+ "load": "4bit",
+ "questions": 293,
+ "micro_acc": 0.8293515358361775,
+ "state_macro_acc": 0.8479563492063493,
+ "by_type": {
+  "noul": 0.8359375,
+  "choice": 0.851063829787234,
+  "score": 0.7887323943661971
+ },
+ "ece": 0.03903773054480553,
+ "seconds": 345
+}

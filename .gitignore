@@ -1,0 +1,19 @@
+# 大きいもの・第三者のもの・個人環境のものは載せない
+models/
+external/
+.venv/
+.claude-terminal
+__pycache__/
+*.pyc
+
+# 第三者のデータ（取得方法は README を参照）
+data/decision-bench/
+data/gsm8k_train.jsonl
+data/gsm8k_test.jsonl
+data/math500.jsonl
+
+# 生ログと大きい中間生成物
+results/logs/
+results/**/*.pt
+results/**/tokens.jsonl.gz
+*.log

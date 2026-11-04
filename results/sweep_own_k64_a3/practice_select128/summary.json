@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/own_k64_a3",
+ "tag": "sweep_own_k64_a3",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 1,
+ "max_tokens": 8192,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.15625,
+ "ok": 20,
+ "total": 128,
+ "cut_share": 0.8515625,
+ "cut_with_loop_tail": 51,
+ "think_closed_share": 0.1640625,
+ "mean_tokens": 7727.4375,
+ "gen_seconds": 185
+}

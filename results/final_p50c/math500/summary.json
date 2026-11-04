@@ -1,0 +1,18 @@
+{
+ "model": "models/Qwen3.5-0.8B-p50c",
+ "tag": "final_p50c",
+ "set": "math500",
+ "n_problems": 64,
+ "samples": 1,
+ "max_tokens": 8192,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.140625,
+ "ok": 9,
+ "total": 64,
+ "cut_share": 0.859375,
+ "cut_with_loop_tail": 2,
+ "think_closed_share": 0.171875,
+ "mean_tokens": 7802.859375,
+ "gen_seconds": 88
+}

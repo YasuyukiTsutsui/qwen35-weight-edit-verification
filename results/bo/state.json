@@ -1,0 +1,44 @@
+[
+ {
+  "alpha": 11.5,
+  "k": 256,
+  "tag": "bo_bo_k256_a11.5_s0",
+  "ok": 71,
+  "n_seq": 256,
+  "acc": 0.27734375,
+  "loops": 3,
+  "closed": 222,
+  "gen_seconds": 513,
+  "info": {
+   "phase": "init"
+  }
+ },
+ {
+  "alpha": 5.0,
+  "k": 64,
+  "tag": "bo_bo_k64_a5_s0",
+  "ok": 96,
+  "n_seq": 256,
+  "acc": 0.375,
+  "loops": 93,
+  "closed": 143,
+  "gen_seconds": 821,
+  "info": {
+   "phase": "init"
+  }
+ },
+ {
+  "alpha": 3.5,
+  "k": 128,
+  "tag": "bo_bo_k128_a3.5_s0",
+  "ok": 102,
+  "n_seq": 256,
+  "acc": 0.3984375,
+  "loops": 97,
+  "closed": 133,
+  "gen_seconds": 825,
+  "info": {
+   "phase": "init"
+  }
+ }
+]
