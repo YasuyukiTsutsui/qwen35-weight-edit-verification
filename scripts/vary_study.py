@@ -9,6 +9,7 @@ The centre is re-evaluated with the same seed (c0), so differences are not infla
   targets     only15, only19                       one layer removed (alpha* on the remaining layer)
               add11, add23                         a third layer added with alpha* (11: full-attention layer; 23: full-attention, large damage in the teacher-forced scan)
               randcols                             k RANDOM columns instead of the top-k by score (same alpha*, same direction)
+              allcols                              all 3,584 columns (the original log found top-64 and all columns equal in accuracy at alpha=4)
 
     python scripts/vary_study.py            # resumable; writes results/vary/summary.json
 Edited weights of the variants are deleted after their evaluation (edit_log.json is kept) to save disk.
@@ -41,6 +42,7 @@ def variants(al, k):
         ("add11", ["--layers", "11,15,19", "--alpha", f(al)]),
         ("add23", ["--layers", "15,19,23", "--alpha", f(al)]),
         ("randcols", ["--layers", "15,19", "--alpha", f(al), "--random-cols", "--seed", "1"]),
+        ("allcols", ["--layers", "15,19", "--alpha", f(al), "--k", "all"]),
     ]
 
 
