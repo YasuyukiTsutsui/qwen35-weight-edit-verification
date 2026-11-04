@@ -138,9 +138,15 @@ def evaluate(alpha, k, rows_file, samples, seed, direction, tag_prefix):
         if rc:
             raise RuntimeError(f"make_edit failed for {name} (see {log})")
     tag = f"{tag_prefix}_{name}_s{seed}"
-    rc = sh(["python3", "scripts/eval_math.py", "--model", edit, "--tag", tag, "--rows-file", rows_file, "--samples", str(samples),
-             "--max-tokens", "16384", "--max-num-seqs", "64", "--gpu-mem", "0.7", "--seed", str(seed)], log)
     sp = os.path.join(ROOT, "results", tag, os.path.splitext(os.path.basename(rows_file))[0], "summary.json")
+    for attempt in range(3):  # a run can die for host reasons (sleep/wake, Docker hiccup); a re-evaluated point must really be re-run
+        if os.path.exists(sp) and attempt == 0:
+            os.replace(sp, sp + ".prev")  # so that a stale summary of an earlier evaluation of the same tag is never mistaken for this run
+        rc = sh(["python3", "scripts/eval_math.py", "--model", edit, "--tag", tag, "--rows-file", rows_file, "--samples", str(samples),
+                 "--max-tokens", "16384", "--max-num-seqs", "64", "--gpu-mem", "0.7", "--seed", str(seed)], log)
+        if not rc and os.path.exists(sp):
+            break
+        time.sleep(120)
     if rc or not os.path.exists(sp):
         raise RuntimeError(f"eval failed for {name} (see {log})")
     s = json.load(open(sp))

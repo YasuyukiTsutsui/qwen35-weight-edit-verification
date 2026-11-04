@@ -1,0 +1,20 @@
+{
+ "pool": [
+  "bo_bo_k128_a2_s0",
+  "bo_bo_k128_a3.5_s0",
+  "bo_bo_k256_a11.5_s0",
+  "bo_bo_k256_a4_s0",
+  "bo_bo_k256_a5.5_s0",
+  "bo_bo_k256_a5_s0",
+  "bo_bo_k256_a6_s0",
+  "bo_bo_k256_a8_s0",
+  "bo_bo_k64_a13_s0",
+  "bo_bo_k64_a5_s0",
+  "bo_bo_k64_a6.5_s0",
+  "scr_t1_L10_14_r12",
+  "scr_t1_L10_r12",
+  "scr_t1_L14_r12",
+  "scr_t1_mp_L15_19_r12"
+ ],
+ "note": "frozen 2026-11-04; the out-of-sample check uses only edits not listed here"
+}

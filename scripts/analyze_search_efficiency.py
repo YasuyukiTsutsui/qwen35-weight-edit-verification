@@ -16,7 +16,8 @@ protocol reproduces the full ranking, not generalisation (that is the job of the
 approximated as "correct and finished within the cap". The pool is the edits of this study (layer sets, strengths, column counts), not a
 random sample of all possible locations; the top of the pool is within about +-1.5 pt of sampling noise, so some regret is unavoidable.
 
-    python -I scripts/analyze_search_efficiency.py        # writes results/analysis_search_efficiency.json
+    python -I scripts/analyze_search_efficiency.py        # in-sample pool v1 (frozen in results/search_efficiency_pool_v1.json) -> results/analysis_search_efficiency.json
+    python -I scripts/analyze_search_efficiency.py --oos  # out-of-sample: only edits NOT in pool v1 (strategies fixed in advance, see Issue #25)
 """
 import glob
 import gzip
@@ -46,18 +47,20 @@ def load(tag):
     return by
 
 
-def build_pool():
+def build_pool(exclude=frozenset()):
     tags, per = [], {}
     for sp in sorted(glob.glob(os.path.join(ROOT, "results", "*", "practice_select128", "summary.json"))):
         s = json.load(open(sp))
         tag = sp.split(os.sep)[-3]
-        if s.get("max_tokens") != 16384 or "base" in tag:
+        if s.get("max_tokens") != 16384 or "base" in tag or tag in exclude:
             continue
         by = load(tag)
         if any(len(v) != 2 for v in by.values()):
             continue
         tags.append(tag)
         per[tag] = by
+    if not tags:
+        raise SystemExit("no edits in the pool yet (for --oos: no fully evaluated edit outside pool v1)")
     ids = sorted(set.intersection(*[set(per[t]) for t in tags]))
     E, P = len(tags), len(ids)
     corr = np.zeros((E, P, 2), bool)
@@ -73,7 +76,15 @@ def build_pool():
 
 
 def main():
-    tags, ids, corr, tok, wf = build_pool()
+    oos = "--oos" in sys.argv
+    frozen_path = os.path.join(ROOT, "results", "search_efficiency_pool_v1.json")
+    if oos:
+        tags, ids, corr, tok, wf = build_pool(set(json.load(open(frozen_path))["pool"]))
+        print("OUT-OF-SAMPLE pool (edits not in pool v1)")
+    else:
+        tags, ids, corr, tok, wf = build_pool()
+        if not os.path.exists(frozen_path):
+            json.dump({"pool": tags, "note": "frozen 2026-11-04; the out-of-sample check uses only edits not listed here"}, open(frozen_path, "w"), indent=1)
     E, P = len(tags), len(ids)
     rng = np.random.default_rng(0)
     full_acc = corr.mean((1, 2))
@@ -155,7 +166,7 @@ def main():
     out["rank_corr_full_sample"] = pr
     print(f"\nrank correlation with the full accuracy over the pool: well-formed share {pr['wellformed']:+.2f}; "
           f"accuracy at cap 2048/4096/8192: " + " / ".join(f"{caps[c]:+.2f}" for c in (2048, 4096, 8192)))
-    json.dump(out, open(os.path.join(ROOT, "results", "analysis_search_efficiency.json"), "w"), indent=1)
+    json.dump(out, open(os.path.join(ROOT, "results", "analysis_search_efficiency_oos.json" if oos else "analysis_search_efficiency.json"), "w"), indent=1)
 
 
 if __name__ == "__main__":
