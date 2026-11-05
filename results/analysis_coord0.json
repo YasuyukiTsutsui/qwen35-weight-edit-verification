@@ -1,0 +1,82 @@
+{
+ "reference": {
+  "random_top1": 0.011655436506048155,
+  "random_ranks2_16": 0.10696765078241759
+ },
+ "files": {
+  "qwen_dir": {
+   "0": {
+    "top_coord": 0,
+    "coord0_share": 0.5123794078826904,
+    "ranks2_16_share_excluding_coord0": 0.05863324552774429,
+    "cos_u_vs_u_without_coord0": 0.6982985138893127,
+    "cos_u_vs_coord0_only": 0.7158068418502808
+   },
+   "1": {
+    "top_coord": 0,
+    "coord0_share": 0.36490359902381897,
+    "ranks2_16_share_excluding_coord0": 0.0707748606801033,
+    "cos_u_vs_u_without_coord0": 0.7969294190406799,
+    "cos_u_vs_coord0_only": 0.6040725111961365
+   },
+   "15": {
+    "top_coord": 0,
+    "coord0_share": 0.09625991433858871,
+    "ranks2_16_share_excluding_coord0": 0.11839117854833603,
+    "cos_u_vs_u_without_coord0": 0.950652539730072,
+    "cos_u_vs_coord0_only": 0.31025782227516174
+   },
+   "19": {
+    "top_coord": 0,
+    "coord0_share": 0.3077559769153595,
+    "ranks2_16_share_excluding_coord0": 0.09123601019382477,
+    "cos_u_vs_u_without_coord0": 0.8320120573043823,
+    "cos_u_vs_coord0_only": 0.5547575950622559
+   },
+   "23": {
+    "top_coord": 0,
+    "coord0_share": 0.5793354511260986,
+    "ranks2_16_share_excluding_coord0": 0.10199832171201706,
+    "cos_u_vs_u_without_coord0": 0.648586630821228,
+    "cos_u_vs_coord0_only": 0.7611408829689026
+   }
+  },
+  "qwen_dir_mp": {
+   "0": {
+    "top_coord": 0,
+    "coord0_share": 0.5627604722976685,
+    "ranks2_16_share_excluding_coord0": 0.05405691638588905,
+    "cos_u_vs_u_without_coord0": 0.6612409353256226,
+    "cos_u_vs_coord0_only": 0.7501736283302307
+   },
+   "1": {
+    "top_coord": 0,
+    "coord0_share": 0.3691817820072174,
+    "ranks2_16_share_excluding_coord0": 0.07299469411373138,
+    "cos_u_vs_u_without_coord0": 0.7942405939102173,
+    "cos_u_vs_coord0_only": 0.6076033115386963
+   },
+   "15": {
+    "top_coord": 0,
+    "coord0_share": 0.12603716552257538,
+    "ranks2_16_share_excluding_coord0": 0.10460173338651657,
+    "cos_u_vs_u_without_coord0": 0.9348598122596741,
+    "cos_u_vs_coord0_only": 0.35501712560653687
+   },
+   "19": {
+    "top_coord": 0,
+    "coord0_share": 0.3055610954761505,
+    "ranks2_16_share_excluding_coord0": 0.08831623941659927,
+    "cos_u_vs_u_without_coord0": 0.8333300948143005,
+    "cos_u_vs_coord0_only": 0.5527758002281189
+   },
+   "23": {
+    "top_coord": 0,
+    "coord0_share": 0.5605179667472839,
+    "ranks2_16_share_excluding_coord0": 0.11648783087730408,
+    "cos_u_vs_u_without_coord0": 0.6629342436790466,
+    "cos_u_vs_coord0_only": 0.7486774921417236
+   }
+  }
+ }
+}
