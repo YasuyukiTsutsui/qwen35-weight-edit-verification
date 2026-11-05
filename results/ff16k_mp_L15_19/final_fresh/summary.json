@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/t1_mp_L15_19_r12",
+ "tag": "ff16k_mp_L15_19",
+ "set": "data/final_fresh.jsonl",
+ "n_problems": 256,
+ "samples": 1,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.40234375,
+ "ok": 103,
+ "total": 256,
+ "cut_share": 0.55859375,
+ "cut_with_loop_tail": 103,
+ "think_closed_share": 0.56640625,
+ "mean_tokens": 13108.6796875,
+ "gen_seconds": 798
+}

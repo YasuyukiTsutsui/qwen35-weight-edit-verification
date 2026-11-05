@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/qwen_own",
+ "tag": "ff16k_own_a6",
+ "set": "data/final_fresh.jsonl",
+ "n_problems": 256,
+ "samples": 1,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.4296875,
+ "ok": 110,
+ "total": 256,
+ "cut_share": 0.51953125,
+ "cut_with_loop_tail": 71,
+ "think_closed_share": 0.66015625,
+ "mean_tokens": 12888.26953125,
+ "gen_seconds": 782
+}

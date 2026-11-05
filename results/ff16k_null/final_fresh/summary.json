@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/null_k256_a6_s1",
+ "tag": "ff16k_null",
+ "set": "data/final_fresh.jsonl",
+ "n_problems": 256,
+ "samples": 1,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.14453125,
+ "ok": 37,
+ "total": 256,
+ "cut_share": 0.87890625,
+ "cut_with_loop_tail": 211,
+ "think_closed_share": 0.12890625,
+ "mean_tokens": 15069.94921875,
+ "gen_seconds": 1001
+}

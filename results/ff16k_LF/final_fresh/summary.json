@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/bo_k256_a5.5",
+ "tag": "ff16k_LF",
+ "set": "data/final_fresh.jsonl",
+ "n_problems": 256,
+ "samples": 1,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.45703125,
+ "ok": 117,
+ "total": 256,
+ "cut_share": 0.4375,
+ "cut_with_loop_tail": 50,
+ "think_closed_share": 0.78125,
+ "mean_tokens": 11950.25,
+ "gen_seconds": 701
+}

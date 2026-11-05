@@ -1,0 +1,18 @@
+{
+ "model": "models/Qwen3.5-0.8B",
+ "tag": "ff16k_base",
+ "set": "data/final_fresh.jsonl",
+ "n_problems": 256,
+ "samples": 1,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.1328125,
+ "ok": 34,
+ "total": 256,
+ "cut_share": 0.890625,
+ "cut_with_loop_tail": 218,
+ "think_closed_share": 0.109375,
+ "mean_tokens": 15169.51953125,
+ "gen_seconds": 1035
+}
