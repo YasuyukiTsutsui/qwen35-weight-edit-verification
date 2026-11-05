@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/eq_oblique",
+ "tag": "eqv_oblique",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.078125,
+ "ok": 20,
+ "total": 256,
+ "cut_share": 0.9375,
+ "cut_with_loop_tail": 229,
+ "think_closed_share": 0.0625,
+ "mean_tokens": 15737.5703125,
+ "gen_seconds": 1140
+}

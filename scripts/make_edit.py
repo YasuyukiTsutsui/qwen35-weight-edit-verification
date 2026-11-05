@@ -30,6 +30,10 @@ def main():
     ap.add_argument("--seed", type=int, default=0, help="seed of the random control direction")
     ap.add_argument("--random-cols", action="store_true",
                     help="control for the column choice: edit k RANDOM columns (seeded) instead of the top-k by score")
+    ap.add_argument("--cols-file", default=None,
+                    help="N2 (Issue #22): a torch file {layer: {key: score vector over the 3584 columns}} (results/grad_probe/colscores.pt); "
+                         "edit the top-k columns by that score instead of the contrast-based ones")
+    ap.add_argument("--cols-key", default="score_sum", help="which score in --cols-file (score_sum, score_h0, score_h1)")
     ap.add_argument("--rho", default=None,
                     help="set alpha per layer so that the relative change ||dW||_F/||W||_F equals this (one value, or per layer like 15:0.16,19:0.175); "
                          "overrides --alpha. Used to compare column choices / column counts at the SAME edit size")
@@ -52,7 +56,7 @@ def main():
             shutil.copyfile(p, os.path.join(a.out, f))
     shards = sorted(f for f in os.listdir(a.base) if f.endswith(".safetensors"))
     log = {"base": a.base, "dir": a.dir, "layers": layers, "k": a.k, "alpha": alphas, "seed": a.seed, "norm_match": a.norm_match,
-           "random_control": a.random_control, "random_cols": a.random_cols, "rho": a.rho, "tensors": {}}
+           "random_control": a.random_control, "random_cols": a.random_cols, "cols_file": a.cols_file, "cols_key": a.cols_key, "rho": a.rho, "tensors": {}}
     g = torch.Generator().manual_seed(a.seed)
     for sh in shards:
         sd = load_file(os.path.join(a.base, sh))
@@ -74,6 +78,8 @@ def main():
                 S = torch.arange(W.shape[1])
             elif a.random_cols:
                 S = torch.randperm(W.shape[1], generator=g)[:int(a.k)]
+            elif a.cols_file:
+                S = torch.topk(torch.load(a.cols_file)[L][a.cols_key].double(), int(a.k)).indices
             else:
                 S = torch.tensor(info["layers"][L]["top_neurons"][:int(a.k)])
             WS = W[:, S]

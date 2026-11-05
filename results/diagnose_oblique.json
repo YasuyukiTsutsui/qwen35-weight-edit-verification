@@ -1,0 +1,44 @@
+{
+ "15": {
+  "centre": {
+   "contrast_per_unit": 2.219692477642202,
+   "damage_per_unit": 0.4341856181194282,
+   "mean_shift_loop_per_unit": 2.427782801086738,
+   "mean_shift_prod_per_unit": 0.20809032344453582
+  },
+  "oblique": {
+   "contrast_per_unit": 0.6785918637643931,
+   "damage_per_unit": 0.17002686497112546,
+   "mean_shift_loop_per_unit": 0.5584747793071893,
+   "mean_shift_prod_per_unit": -0.12011708445720375
+  },
+  "lda": {
+   "contrast_per_unit": 1.177975072471556,
+   "damage_per_unit": 0.038102898405500636,
+   "mean_shift_loop_per_unit": 1.1779608979210259,
+   "mean_shift_prod_per_unit": -1.417455052993903e-05
+  },
+  "cos_oblique_vs_centre_readvec": 0.21793778847854667
+ },
+ "19": {
+  "centre": {
+   "contrast_per_unit": 2.9679507737097204,
+   "damage_per_unit": 0.6568133448175282,
+   "mean_shift_loop_per_unit": 3.28168233145944,
+   "mean_shift_prod_per_unit": 0.3137315577497191
+  },
+  "oblique": {
+   "contrast_per_unit": 0.6919053199422306,
+   "damage_per_unit": 0.1454574681925298,
+   "mean_shift_loop_per_unit": 0.6789422204301129,
+   "mean_shift_prod_per_unit": -0.0129630995121177
+  },
+  "lda": {
+   "contrast_per_unit": 0.8689360247877651,
+   "damage_per_unit": 0.04471141805278215,
+   "mean_shift_loop_per_unit": 0.8688866679700431,
+   "mean_shift_prod_per_unit": -4.9356817722054227e-05
+  },
+  "cos_oblique_vs_centre_readvec": 0.20780401874144622
+ }
+}

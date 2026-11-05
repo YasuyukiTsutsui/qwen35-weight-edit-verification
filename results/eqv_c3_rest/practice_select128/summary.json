@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/eq_c3_rest",
+ "tag": "eqv_c3_rest",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.4375,
+ "ok": 112,
+ "total": 256,
+ "cut_share": 0.3984375,
+ "cut_with_loop_tail": 58,
+ "think_closed_share": 0.859375,
+ "mean_tokens": 12128.05078125,
+ "gen_seconds": 745
+}

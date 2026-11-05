@@ -1,0 +1,111 @@
+{
+ "centre": {
+  "acc": 0.4296875,
+  "loop_share": 0.17578125
+ },
+ "eqv_c3_rest": {
+  "acc": 0.4375,
+  "acc_ci": [
+   0.359375,
+   0.515625
+  ],
+  "loop_share": 0.2265625,
+  "finished_share": 0.6015625,
+  "diff_vs_centre": 0.0078125,
+  "diff_ci": [
+   -0.0390625,
+   0.0546875
+  ],
+  "p_two_sided": 0.7936,
+  "rho": {
+   "15": 0.15983010601942255,
+   "19": 0.17460982725650306
+  },
+  "n_problems_better": 15,
+  "n_problems_worse": 14
+ },
+ "eqv_c3_only": {
+  "acc": 0.16796875,
+  "acc_ci": [
+   0.1171875,
+   0.2265625
+  ],
+  "loop_share": 0.79296875,
+  "finished_share": 0.16015625,
+  "diff_vs_centre": -0.26171875,
+  "diff_ci": [
+   -0.33203125,
+   -0.19140625
+  ],
+  "p_two_sided": 0.0,
+  "rho": {
+   "15": 0.04958224850237205,
+   "19": 0.09690934033042063
+  },
+  "n_problems_better": 2,
+  "n_problems_worse": 45
+ },
+ "eqv_lda": {
+  "acc": 0.4296875,
+  "acc_ci": [
+   0.3515625,
+   0.5078125
+  ],
+  "loop_share": 0.3984375,
+  "finished_share": 0.4609375,
+  "diff_vs_centre": 0.0,
+  "diff_ci": [
+   -0.05078125,
+   0.05078125
+  ],
+  "p_two_sided": 1.0466,
+  "rho": {
+   "15": 0.15983926409438245,
+   "19": 0.17462446212438867
+  },
+  "n_problems_better": 14,
+  "n_problems_worse": 14
+ },
+ "eqv_oblique": {
+  "acc": 0.078125,
+  "acc_ci": [
+   0.04296875,
+   0.1171875
+  ],
+  "loop_share": 0.89453125,
+  "finished_share": 0.0625,
+  "diff_vs_centre": -0.3515625,
+  "diff_ci": [
+   -0.42578125,
+   -0.27734375
+  ],
+  "p_two_sided": 0.0,
+  "rho": {
+   "15": 0.15981211188618744,
+   "19": 0.17461552743817754
+  },
+  "n_problems_better": 0,
+  "n_problems_worse": 57
+ },
+ "eqv_gs": {
+  "acc": 0.39453125,
+  "acc_ci": [
+   0.3203125,
+   0.47265625
+  ],
+  "loop_share": 0.328125,
+  "finished_share": 0.4609375,
+  "diff_vs_centre": -0.03515625,
+  "diff_ci": [
+   -0.08203125,
+   0.0078125
+  ],
+  "p_two_sided": 0.1432,
+  "rho": {
+   "15": 0.15982365017996664,
+   "19": 0.17462046749873
+  },
+  "n_problems_better": 11,
+  "n_problems_worse": 18
+ }
+}
