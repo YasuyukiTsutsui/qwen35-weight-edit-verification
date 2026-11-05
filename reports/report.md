@@ -427,6 +427,7 @@ Claude がプロジェクト内のスクリプトとして追加したものと�
 ## 8. 未実施・今後
 
 - Qwen: 帰属（勾配）による列の選択（#22。勾配プローブで列側の主成分は再現したが、方向側は再現せず、3.13 節）。位置を合わせた「止まった」方向への u の取り直し、SEAL 型の第 2 の方向。64 を超える本数での方向の作成。32,768 トークンなど、より長い上限での測定。方法A の拡張（#27）と、行を絞った編集（#26）は、結果に基づき実行しない（3.13 節）。式の変更（#28）は探索的で、最終的な優劣の主張には新しい問題と新しい事前登録が必要です。
+- 確認用の問題セット: 次の確認のために、まだ誰も使っていない 3,080 問（C1〜C5。C1 はテスト由来 616 問、C2〜C5 は train 由来 各 616 問）を、塩つきハッシュ順で封印し、事前登録の枠（`reports/preregistration_final2_frame.md`）を固定した（Issue #29）。評価は実行していない。専門エージェント 2 人の検討で、前回と同じ候補を新しい約 600 問で評価する案は、検出力が 22〜29% で、残る問いは決着済みのため採らなかった。確認は、確認する価値のある新しい候補が出て、追補（候補・問題数・主比較 1 本）を固定してからにする。方法B と公開編集の +2 pt の差を決着させるには約 3,000 問（約 4.6 GPU 時間）が要り、依頼者の承認を得てから行う。主解析は、GSM8K と MATH を 1:1 に固定した層別の推定量を使う（前回は B−公開が GSM8K −0.8 pt、MATH +4.7 pt と層で違った）。
 - 他のモデル・課題: CNN など LLM 以外での手法の確認（3.14 節）。
 - Gemma 4 E2B: 編集（対象となる障害がなかったため）。
 - Jev-Omni: 組み立て方 v2 の測定、ヘッドの重み編集、8bit での全件測定。再実行は、依頼者の許可を得てから行います。
@@ -471,6 +472,7 @@ Claude がプロジェクト内のスクリプトとして追加したものと�
 - `scripts/vary_study.py`、`scripts/vary_followup.py`、`scripts/extra_study.py`、`scripts/weightonly_study.py`: 変化検証、追加検証、重みだけの検証
 - `scripts/analyze_label_free.py`、`scripts/analyze_search_efficiency.py`、`scripts/analyze_direction_concentration.py`、`scripts/analyze_layer_choice.py`: 保存済みの標本からの分析（GPU 不要）
 - `scripts/collect_stats.py`、`scripts/make_variant_edit.py`、`scripts/analyze_variants_cpu.py`、`scripts/analyze_variants_eval.py`、`scripts/diagnose_oblique.py`、`scripts/queue_eq.sh`、`scripts/grad_probe.py`: 式の変更（3.13 節）の統計の収集、編集の作成、CPU の事前確認、対応つきの比較、勾配プローブ
+- `scripts/make_final2_blocks.py`、`data/final2/manifest.json`、`scripts/final_analysis2.py`、`reports/preregistration_final2_frame.md`: 次の確認のための問題セットの封印、層別の解析、事前登録の枠（Issue #29）
 - `scripts/final_analysis.py`: 事前登録した最終解析（`reports/preregistration_final.md`、`reports/final_confirmation_results.md`）
 - `scripts/eval_jev.py`: Jev-Omni の DecisionBench 評価
 - `scripts/drun.sh`、`scripts/monitor.py`、`scripts/guarded_jev.sh`、`scripts/keep_awake.ps1`、`scripts/queue_*.sh`: 実行の安全装置と、評価の順番待ち
