@@ -1,0 +1,5 @@
+reports/preregistration_final.md
+sha256: aa4bc0f6b894581f5d54582791a639ce120dd297b763b1d596b7631c596f725f
+computed: 2026-11-05T12:35:21+0900 (local time, +0900 if shown)
+recorded by: Claude (Sonnet 5.5), at the user's standing request to continue the verification
+state: all placeholders filled; frozen before the first final-confirmation evaluation
