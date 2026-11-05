@@ -107,5 +107,26 @@
   },
   "n_problems_better": 11,
   "n_problems_worse": 18
+ },
+ "eqv_lda_r06": {
+  "acc": 0.22265625,
+  "acc_ci": [
+   0.1640625,
+   0.28515625
+  ],
+  "loop_share": 0.703125,
+  "finished_share": 0.23046875,
+  "diff_vs_centre": -0.20703125,
+  "diff_ci": [
+   -0.2734375,
+   -0.140625
+  ],
+  "p_two_sided": 0.0,
+  "rho": {
+   "15": 0.09590925691346995,
+   "19": 0.10477877864069302
+  },
+  "n_problems_better": 5,
+  "n_problems_worse": 42
  }
 }

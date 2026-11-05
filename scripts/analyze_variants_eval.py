@@ -16,7 +16,7 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CENTRE = "vary_c0"
-VARIANTS = {"eqv_c3_rest": "eq_c3_rest", "eqv_c3_only": "eq_c3_only", "eqv_lda": "eq_lda", "eqv_oblique": "eq_oblique", "eqv_gs": "eq_gs"}
+VARIANTS = {"eqv_c3_rest": "eq_c3_rest", "eqv_c3_only": "eq_c3_only", "eqv_lda": "eq_lda", "eqv_oblique": "eq_oblique", "eqv_gs": "eq_gs", "eqv_lda_r06": "eq_lda_r06"}
 
 
 def load(tag):

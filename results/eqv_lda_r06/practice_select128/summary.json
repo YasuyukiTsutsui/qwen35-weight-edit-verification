@@ -1,0 +1,18 @@
+{
+ "model": "models/edits/eq_lda_r06",
+ "tag": "eqv_lda_r06",
+ "set": "data/practice_select128.jsonl",
+ "n_problems": 128,
+ "samples": 2,
+ "max_tokens": 16384,
+ "preset": "qwen35_think",
+ "thinking": 1,
+ "acc": 0.22265625,
+ "ok": 57,
+ "total": 256,
+ "cut_share": 0.76953125,
+ "cut_with_loop_tail": 180,
+ "think_closed_share": 0.2421875,
+ "mean_tokens": 14200.6953125,
+ "gen_seconds": 962
+}
