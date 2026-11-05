@@ -17,6 +17,11 @@ E.PRESETS.update({
     "qwen35_think_t10": dict(temperature=1.0, top_p=0.95, top_k=20, presence_penalty=1.5),
     "qwen35_think_p20": dict(temperature=0.6, top_p=0.95, top_k=20, presence_penalty=2.0),
     "qwen35_nothink": dict(temperature=1.0, top_p=1.0, top_k=20, presence_penalty=2.0),
+    # Issue #31, sweep of the non-thinking sampler (temperature x presence; top_p 1.0 and top_k 20 as in the card)
+    "qwen35_nt_T07_p0": dict(temperature=0.7, top_p=1.0, top_k=20, presence_penalty=0.0),
+    "qwen35_nt_T07_p15": dict(temperature=0.7, top_p=1.0, top_k=20, presence_penalty=1.5),
+    "qwen35_nt_T10_p0": dict(temperature=1.0, top_p=1.0, top_k=20, presence_penalty=0.0),
+    "qwen35_nt_T10_p15": dict(temperature=1.0, top_p=1.0, top_k=20, presence_penalty=1.5),
 })
 
 if __name__ == "__main__":
