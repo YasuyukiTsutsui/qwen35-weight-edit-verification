@@ -30,6 +30,42 @@
    "tag": "ff16k_A",
    "acc": 0.453125
   },
+  "NT (non-thinking, card)": {
+   "tag": "bl_nt_ff",
+   "file": null,
+   "acc": 0.49609375,
+   "acc_ci": [
+    0.4375,
+    0.55859375
+   ],
+   "diff_vs_edit": 0.015625,
+   "diff_vs_edit_ci": [
+    -0.05078125,
+    0.07822265624999858
+   ],
+   "diff_vs_base": 0.36328125,
+   "finished_share": 0.9140625,
+   "mean_tokens": 6218.1015625,
+   "verdict_vs_edit": "reaches the edit"
+  },
+  "NT edit (non-thinking, edited)": {
+   "tag": "bl_nt_edit_ff",
+   "file": null,
+   "acc": 0.4609375,
+   "acc_ci": [
+    0.40234375,
+    0.51953125
+   ],
+   "diff_vs_edit": -0.01953125,
+   "diff_vs_edit_ci": [
+    -0.0859375,
+    0.046875
+   ],
+   "diff_vs_base": 0.328125,
+   "finished_share": 0.9140625,
+   "mean_tokens": 6353.1796875,
+   "verdict_vs_edit": "reaches the edit"
+  },
   "BF4096 base": {
    "tag": "bf_base_ff",
    "file": "samples_B4096.jsonl.gz",

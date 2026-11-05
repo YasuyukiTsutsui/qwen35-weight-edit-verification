@@ -72,6 +72,24 @@
    "mean_tokens": 6662.84375,
    "verdict_vs_edit": "reaches the edit"
   },
+  "NT edit (non-thinking, edited)": {
+   "tag": "bl_nt_edit",
+   "file": null,
+   "acc": 0.37890625,
+   "acc_ci": [
+    0.3046875,
+    0.45703125
+   ],
+   "diff_vs_edit": -0.05078125,
+   "diff_vs_edit_ci": [
+    -0.1171875,
+    0.015625
+   ],
+   "diff_vs_base": 0.24609375,
+   "finished_share": 0.89453125,
+   "mean_tokens": 7125.7734375,
+   "verdict_vs_edit": "between"
+  },
   "BF2048 base": {
    "tag": "bf_base",
    "file": "samples_B2048.jsonl.gz",

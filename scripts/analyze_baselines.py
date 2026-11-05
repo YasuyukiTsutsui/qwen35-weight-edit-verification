@@ -17,11 +17,12 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CFG = {
-    "practice_select128": dict(edit="vary_c0", base="rb16k_base", refs=[], budgets=(2048, 4096, 8192, 12288), bf_base="bf_base", bf_edit="bf_edit",
+    "practice_select128": dict(edit="vary_c0", base="rb16k_base", refs=[], budgets=(2048, 4096, 8192, 12288), bf_base="bf_base", bf_edit="bf_edit", nt_base="bl_nothink", nt_edit="bl_nt_edit",
+                               pub="rb16k_p50c",
                                plain=[("T10 (T1.0, card)", "bl_t10"), ("P20 (presence 2.0, card)", "bl_p20"), ("NT (non-thinking, card)", "bl_nothink"),
                                       ("NT edit (non-thinking, edited)", "bl_nt_edit")]),
     "final_fresh": dict(edit="ff16k_B", base="ff16k_base", refs=[("published edit", "ff16k_p50c"), ("own alpha6", "ff16k_own_a6"), ("method A", "ff16k_A")],
-                        budgets=(4096, 8192), bf_base="bf_base_ff", bf_edit="bf_edit_ff",
+                        budgets=(4096, 8192), bf_base="bf_base_ff", bf_edit="bf_edit_ff", nt_base="bl_nt_ff", nt_edit="bl_nt_edit_ff", pub="ff16k_p50c",
                         plain=[("NT (non-thinking, card)", "bl_nt_ff"), ("NT edit (non-thinking, edited)", "bl_nt_edit_ff")]),
 }
 
@@ -51,7 +52,8 @@ def pooled():
         ids = sorted(load(c["edit"], sn))
         data[sn] = (ids, {k: vec(load(t, sn, f), ids, lambda r: float(r["correct"]))
                           for k, (t, f) in {"edit": (c["edit"], None), "base": (c["base"], None),
-                                            "bf_base": (c["bf_base"], "samples_B4096.jsonl.gz"), "bf_edit": (c["bf_edit"], "samples_B4096.jsonl.gz")}.items()})
+                                            "bf_base": (c["bf_base"], "samples_B4096.jsonl.gz"), "bf_edit": (c["bf_edit"], "samples_B4096.jsonl.gz"),
+                                            "nt_base": (c["nt_base"], None), "nt_edit": (c["nt_edit"], None), "pub": (c["pub"], None)}.items()})
     idx = {sn: rng.integers(0, len(data[sn][0]), size=(10000, len(data[sn][0]))) for sn in sets}
     def stat(a, b):
         per = [(data[sn][1][a] - data[sn][1][b]) for sn in sets]
@@ -60,17 +62,47 @@ def pooled():
     print("pooled over practice_select128 + final_fresh (384 problems), budget B = 4,096")
     out = {}
     for a, b, label in [("bf_edit", "edit", "budget-forced edit - edit alone"), ("bf_edit", "bf_base", "budget-forced edit - budget-forced base"),
-                        ("bf_base", "edit", "budget-forced base - edit alone"), ("edit", "base", "edit alone - base")]:
+                        ("bf_base", "edit", "budget-forced base - edit alone"), ("edit", "base", "edit alone - base"),
+                        ("nt_base", "edit", "non-thinking base - edit alone"), ("nt_edit", "nt_base", "non-thinking edit - non-thinking base"),
+                        ("bf_edit", "nt_base", "budget-forced edit - non-thinking base"), ("bf_base", "nt_base", "budget-forced base - non-thinking base"),
+                        ("bf_edit", "pub", "budget-forced edit - published edit"), ("nt_base", "pub", "non-thinking base - published edit"),
+                        ("edit", "pub", "edit B alone - published edit")]:
         m, (lo, hi) = stat(a, b)
         out[label] = {"diff": m, "ci": [lo, hi]}
         print(f"  {label:42s} {100 * m:+5.1f} pt  [{100 * lo:+.1f}, {100 * hi:+.1f}]")
     json.dump(out, open(os.path.join(ROOT, "results", "analysis_baselines_pooled.json"), "w"), indent=1)
 
 
+def strata():
+    """Accuracy of the main arms per stratum (GSM8K / MATH, by id prefix) in both problem sets, with a problem-level bootstrap interval."""
+    rng = np.random.default_rng(20261105)
+    out = {}
+    print("accuracy per stratum (95% CI), exploratory; budget-forced arms use B = 4,096")
+    for sn in ["practice_select128", "final_fresh"]:
+        c = CFG[sn]
+        arms = [("base", c["base"], None), ("edit alone", c["edit"], None), ("BF base", c["bf_base"], "samples_B4096.jsonl.gz"),
+                ("BF edit", c["bf_edit"], "samples_B4096.jsonl.gz"), ("non-thinking base", c["nt_base"], None), ("non-thinking edit", c["nt_edit"], None)]
+        print(f"[{sn}]")
+        for name, tag, fname in arms:
+            v = load(tag, sn, fname)
+            res = {}
+            for st in ("GSM8K", "MATH"):
+                x = np.array([np.mean([r["correct"] for r in rs]) for i, rs in sorted(v.items()) if (i.startswith("gsm8k") == (st == "GSM8K"))])
+                idx = rng.integers(0, len(x), size=(10000, len(x)))
+                lo, hi = np.percentile(x[idx].mean(1), [2.5, 97.5])
+                res[st] = {"n": len(x), "acc": float(x.mean()), "ci": [float(lo), float(hi)]}
+            out.setdefault(sn, {})[name] = res
+            print(f"  {name:18s} GSM8K {100 * res['GSM8K']['acc']:5.1f}% [{100 * res['GSM8K']['ci'][0]:.0f},{100 * res['GSM8K']['ci'][1]:.0f}] (n={res['GSM8K']['n']})   "
+                  f"MATH {100 * res['MATH']['acc']:5.1f}% [{100 * res['MATH']['ci'][0]:.0f},{100 * res['MATH']['ci'][1]:.0f}] (n={res['MATH']['n']})")
+    json.dump(out, open(os.path.join(ROOT, "results", "analysis_baselines_strata.json"), "w"), indent=1)
+
+
 def main():
     set_name = sys.argv[1] if len(sys.argv) > 1 else "practice_select128"
     if set_name == "pooled":
         return pooled()
+    if set_name == "strata":
+        return strata()
     c = CFG[set_name]
     edit, base = load(c["edit"], set_name), load(c["base"], set_name)
     ids = sorted(edit)
