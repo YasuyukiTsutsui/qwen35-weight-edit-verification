@@ -1,0 +1,37 @@
+{
+ "E": {
+  "E1": {
+   "N_weighted": 0.534375,
+   "Xp_weighted": 0.540625,
+   "R_weighted": 0.4671875,
+   "oracle_N_or_Xp_weighted": 0.6546875000000001,
+   "only_N_correct": 73,
+   "only_Xp_correct": 77,
+   "both": 269,
+   "neither": 221,
+   "stratum_choice_weighted": 0.5890625
+  },
+  "k8": {
+   "problems_never_correct": 24,
+   "problems_always_correct": 24,
+   "problems_mixed": 80,
+   "mean_tokens_per_sample": 4874.3984375
+  },
+  "maj_by_k": {
+   "1": 0.5078125,
+   "2": 0.515625,
+   "4": 0.6328125,
+   "8": 0.65625
+  },
+  "k8_strata": {
+   "GSM8K": {
+    "pass1": 0.6015625,
+    "maj": 0.75
+   },
+   "MATH": {
+    "pass1": 0.423828125,
+    "maj": 0.5625
+   }
+  }
+ }
+}

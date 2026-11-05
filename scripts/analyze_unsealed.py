@@ -1,6 +1,6 @@
 """Issue #31, steps A-D (all unsealed).  Host only; uses the saved 'correct' flags and predictions.
 
-    python -I scripts/analyze_unsealed.py [A|B|C|D|all]      -> results/analysis_unsealed.json
+    python -I scripts/analyze_unsealed.py [A|B|C|D|E|all]      -> results/analysis_unsealed.json
 
 Criteria fixed in Issue #31 before any run:
   A  published edit + budget forcing (4,096) - published edit  >= +3 pt with the lower end of the 95% interval > 0, on BOTH the 128 select and the 256 final_fresh problems.
@@ -175,9 +175,62 @@ def step_d():
     OUT["D"] = res
 
 
+def step_e():
+    """Descriptive (exploratory, no criterion): complementarity of N and X' on E1; per-problem pass-rate spread and maj@k vs k for the non-thinking k=8 run."""
+    rng = np.random.default_rng(SEED)
+    res = {}
+    R, X, N = load("e1_R", "e1"), load("e1_Xp", "e1", "samples_B4096.jsonl.gz"), load("e1_N", "e1")
+    if R is not None and X is not None and N is not None:
+        ids = sorted(R)
+        g = np.array([i.startswith("gsm8k") for i in ids])
+        r, x, n = (pv(a, ids) for a in (R, X, N))
+        orc = np.maximum(x, n)
+        w = lambda a: float(0.5 * a[g].mean() + 0.5 * a[~g].mean())
+        res["E1"] = {"N_weighted": w(n), "Xp_weighted": w(x), "R_weighted": w(r), "oracle_N_or_Xp_weighted": w(orc),
+                     "only_N_correct": int(((n == 1) & (x == 0)).sum()), "only_Xp_correct": int(((x == 1) & (n == 0)).sum()), "both": int(((x == 1) & (n == 1)).sum()),
+                     "neither": int(((x == 0) & (n == 0)).sum()),
+                     "stratum_choice_weighted": float(0.5 * x[g].mean() + 0.5 * n[~g].mean())}
+        print(f"E. E1 complementarity: N {100 * w(n):.1f}%  X' {100 * w(x):.1f}%  oracle(N or X') {100 * w(orc):.1f}%  | only N {res['E1']['only_N_correct']}, only X' {res['E1']['only_Xp_correct']}, both {res['E1']['both']}, neither {res['E1']['neither']}")
+        print(f"   post-hoc stratum choice (X' on GSM8K, N on MATH): {100 * res['E1']['stratum_choice_weighted']:.1f}%")
+    K = load("bl_nt_k8", "practice_select128")
+    if K is not None:
+        ids = sorted(K)
+        k = len(K[ids[0]])
+        p = np.array([np.mean([r["correct"] for r in K[i]]) for i in ids])
+        res["k8"] = {"problems_never_correct": int((p == 0).sum()), "problems_always_correct": int((p == 1).sum()), "problems_mixed": int(((p > 0) & (p < 1)).sum()),
+                     "mean_tokens_per_sample": float(np.mean([r["tokens"] for i in ids for r in K[i]]))}
+        print(f"   k8: never correct {res['k8']['problems_never_correct']}, always {res['k8']['problems_always_correct']}, mixed {res['k8']['problems_mixed']} (of {len(ids)});  tokens/sample {res['k8']['mean_tokens_per_sample']:.0f}")
+
+        def maj_of(i, kk):
+            c, order = Counter(), {}
+            sub = K[i][:kk]
+            for r in sub:
+                if r["pred"] is None:
+                    continue
+                key = " ".join(str(r["pred"]).split())
+                c[key] += 1
+                order.setdefault(key, len(order))
+            if not c:
+                return 0.0
+            top = max(c.values())
+            win = min((q for q in c if c[q] == top), key=lambda q: order[q])
+            return float(any(r["correct"] for r in sub if r["pred"] is not None and " ".join(str(r["pred"]).split()) == win))
+        res["maj_by_k"] = {}
+        for kk in (1, 2, 4, 8):
+            m = np.mean([maj_of(i, kk) for i in ids])
+            res["maj_by_k"][kk] = float(m)
+        print("   maj@k:", "  ".join(f"k={kk}: {100 * v:.1f}%" for kk, v in res["maj_by_k"].items()), "(k=1 is the first sample only)")
+        gs = [j for j, i in enumerate(ids) if i.startswith("gsm8k")]
+        ms = [j for j, i in enumerate(ids) if not i.startswith("gsm8k")]
+        mj = np.array([maj_of(i, k) for i in ids])
+        res["k8_strata"] = {"GSM8K": {"pass1": float(p[gs].mean()), "maj": float(mj[gs].mean())}, "MATH": {"pass1": float(p[ms].mean()), "maj": float(mj[ms].mean())}}
+        print(f"   by stratum: GSM8K pass@1 {100 * p[gs].mean():.1f}% maj@{k} {100 * mj[gs].mean():.1f}%   MATH pass@1 {100 * p[ms].mean():.1f}% maj@{k} {100 * mj[ms].mean():.1f}%")
+    OUT["E"] = res
+
+
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "all"
-    for key, fn in (("A", step_a), ("B", step_b), ("C", step_c), ("D", step_d)):
+    for key, fn in (("A", step_a), ("B", step_b), ("C", step_c), ("D", step_d), ("E", step_e)):
         if which in ("all", key):
             fn()
     json.dump(OUT, open(os.path.join(ROOT, "results", f"analysis_unsealed_{which}.json"), "w"), indent=1)
