@@ -1,0 +1,35 @@
+{
+ "B": {
+  "T1.0 / presence 2.0 (model card)": {
+   "tag": "bl_nothink",
+   "acc": 0.4140625,
+   "cut_share": 0.12890625,
+   "mean_tokens": 6662.84375
+  },
+  "T0.7 / 0": {
+   "tag": "bl_nts_T07_p0",
+   "acc": 0.5,
+   "cut_share": 0.16796875,
+   "mean_tokens": 4271.44921875
+  },
+  "T0.7 / 1.5": {
+   "tag": "bl_nts_T07_p15",
+   "acc": 0.51171875,
+   "cut_share": 0.125,
+   "mean_tokens": 4685.39453125
+  },
+  "T1.0 / 0": {
+   "tag": "bl_nts_T10_p0",
+   "acc": 0.4296875,
+   "cut_share": 0.20703125,
+   "mean_tokens": 5769.4765625
+  },
+  "T1.0 / 1.5": {
+   "tag": "bl_nts_T10_p15",
+   "acc": 0.48828125,
+   "cut_share": 0.16015625,
+   "mean_tokens": 6569.83203125
+  },
+  "chosen": "qwen35_nt_T07_p15"
+ }
+}
