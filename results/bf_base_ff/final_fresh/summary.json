@@ -1,0 +1,31 @@
+{
+ "model": "models/Qwen3.5-0.8B",
+ "source": "ff16k_base",
+ "tag": "bf_base_ff",
+ "set": "data/final_fresh.jsonl",
+ "preset": "qwen35_think",
+ "seed": 2,
+ "total_cap": 16384,
+ "forced_sentence": "\n\nConsidering the limited time by the user, I have to give the solution based on the thinking directly now.\n</think>\n\n",
+ "n_source_samples": 256,
+ "gen_seconds": 940,
+ "budgets": {
+  "4096": {
+   "acc": 0.5078125,
+   "ok": 130,
+   "forced_share": 0.95703125,
+   "mean_tokens": 9987.8515625
+  },
+  "8192": {
+   "acc": 0.484375,
+   "ok": 124,
+   "forced_share": 0.90234375,
+   "mean_tokens": 12021.29296875
+  }
+ },
+ "max_num_seqs": 64,
+ "gpu_mem": 0.7,
+ "vllm_version": "0.32.0",
+ "gpu": "NVIDIA GeForce RTX 5070 Ti",
+ "torch_version": "2.13.0+cu130"
+}

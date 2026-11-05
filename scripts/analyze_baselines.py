@@ -18,9 +18,11 @@ import numpy as np
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CFG = {
     "practice_select128": dict(edit="vary_c0", base="rb16k_base", refs=[], budgets=(2048, 4096, 8192, 12288), bf_base="bf_base", bf_edit="bf_edit",
-                               plain=[("T10 (T1.0, card)", "bl_t10"), ("P20 (presence 2.0, card)", "bl_p20"), ("NT (non-thinking, card)", "bl_nothink")]),
+                               plain=[("T10 (T1.0, card)", "bl_t10"), ("P20 (presence 2.0, card)", "bl_p20"), ("NT (non-thinking, card)", "bl_nothink"),
+                                      ("NT edit (non-thinking, edited)", "bl_nt_edit")]),
     "final_fresh": dict(edit="ff16k_B", base="ff16k_base", refs=[("published edit", "ff16k_p50c"), ("own alpha6", "ff16k_own_a6"), ("method A", "ff16k_A")],
-                        budgets=(4096, 8192), bf_base="bf_base_ff", bf_edit="bf_edit_ff", plain=[]),
+                        budgets=(4096, 8192), bf_base="bf_base_ff", bf_edit="bf_edit_ff",
+                        plain=[("NT (non-thinking, card)", "bl_nt_ff"), ("NT edit (non-thinking, edited)", "bl_nt_edit_ff")]),
 }
 
 
@@ -39,8 +41,36 @@ def vec(byp, ids, f):
     return np.array([np.mean([f(r) for r in byp[i]]) for i in ids])
 
 
+def pooled():
+    """Stage 2 pooled over both problem sets (384 problems, bootstrap stratified by set): the differences that decide the stacking question."""
+    sets = ["practice_select128", "final_fresh"]
+    rng = np.random.default_rng(20261105)
+    data = {}
+    for sn in sets:
+        c = CFG[sn]
+        ids = sorted(load(c["edit"], sn))
+        data[sn] = (ids, {k: vec(load(t, sn, f), ids, lambda r: float(r["correct"]))
+                          for k, (t, f) in {"edit": (c["edit"], None), "base": (c["base"], None),
+                                            "bf_base": (c["bf_base"], "samples_B4096.jsonl.gz"), "bf_edit": (c["bf_edit"], "samples_B4096.jsonl.gz")}.items()})
+    idx = {sn: rng.integers(0, len(data[sn][0]), size=(10000, len(data[sn][0]))) for sn in sets}
+    def stat(a, b):
+        per = [(data[sn][1][a] - data[sn][1][b]) for sn in sets]
+        boots = np.concatenate([p[idx[sn]].sum(1)[:, None] for p, sn in zip(per, sets)], axis=1).sum(1) / sum(len(p) for p in per)
+        return float(np.concatenate(per).mean()), [float(x) for x in np.percentile(boots, [2.5, 97.5])]
+    print("pooled over practice_select128 + final_fresh (384 problems), budget B = 4,096")
+    out = {}
+    for a, b, label in [("bf_edit", "edit", "budget-forced edit - edit alone"), ("bf_edit", "bf_base", "budget-forced edit - budget-forced base"),
+                        ("bf_base", "edit", "budget-forced base - edit alone"), ("edit", "base", "edit alone - base")]:
+        m, (lo, hi) = stat(a, b)
+        out[label] = {"diff": m, "ci": [lo, hi]}
+        print(f"  {label:42s} {100 * m:+5.1f} pt  [{100 * lo:+.1f}, {100 * hi:+.1f}]")
+    json.dump(out, open(os.path.join(ROOT, "results", "analysis_baselines_pooled.json"), "w"), indent=1)
+
+
 def main():
     set_name = sys.argv[1] if len(sys.argv) > 1 else "practice_select128"
+    if set_name == "pooled":
+        return pooled()
     c = CFG[set_name]
     edit, base = load(c["edit"], set_name), load(c["base"], set_name)
     ids = sorted(edit)

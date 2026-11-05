@@ -1,0 +1,118 @@
+{
+ "set": "final_fresh",
+ "n_problems": 256,
+ "edit": {
+  "tag": "ff16k_B",
+  "acc": 0.48046875,
+  "acc_ci": [
+   0.41796875,
+   0.54296875
+  ]
+ },
+ "base": {
+  "tag": "ff16k_base",
+  "acc": 0.1328125,
+  "acc_ci": [
+   0.09375,
+   0.17578125
+  ]
+ },
+ "arms": {
+  "published edit": {
+   "tag": "ff16k_p50c",
+   "acc": 0.4609375
+  },
+  "own alpha6": {
+   "tag": "ff16k_own_a6",
+   "acc": 0.4296875
+  },
+  "method A": {
+   "tag": "ff16k_A",
+   "acc": 0.453125
+  },
+  "BF4096 base": {
+   "tag": "bf_base_ff",
+   "file": "samples_B4096.jsonl.gz",
+   "acc": 0.5078125,
+   "acc_ci": [
+    0.4453125,
+    0.5703125
+   ],
+   "diff_vs_edit": 0.02734375,
+   "diff_vs_edit_ci": [
+    -0.01953125,
+    0.07421875
+   ],
+   "diff_vs_base": 0.375,
+   "finished_share": 0.54296875,
+   "mean_tokens": 9987.8515625,
+   "verdict_vs_edit": "reaches the edit"
+  },
+  "BF8192 base": {
+   "tag": "bf_base_ff",
+   "file": "samples_B8192.jsonl.gz",
+   "acc": 0.484375,
+   "acc_ci": [
+    0.421875,
+    0.546875
+   ],
+   "diff_vs_edit": 0.00390625,
+   "diff_vs_edit_ci": [
+    -0.046875,
+    0.05078125
+   ],
+   "diff_vs_base": 0.3515625,
+   "finished_share": 0.515625,
+   "mean_tokens": 12021.29296875,
+   "verdict_vs_edit": "reaches the edit"
+  },
+  "BF4096 edit": {
+   "tag": "bf_edit_ff",
+   "file": "samples_B4096.jsonl.gz",
+   "acc": 0.5390625,
+   "acc_ci": [
+    0.48046875,
+    0.6015625
+   ],
+   "diff_vs_edit": 0.05859375,
+   "diff_vs_edit_ci": [
+    0.01953125,
+    0.1015625
+   ],
+   "diff_vs_base": 0.40625,
+   "finished_share": 0.6875,
+   "mean_tokens": 9806.421875,
+   "verdict_vs_edit": "reaches the edit",
+   "diff_vs_bf_base": 0.03125,
+   "diff_vs_bf_base_ci": [
+    -0.01953125,
+    0.08203125
+   ],
+   "stack_improves_edit": true
+  },
+  "BF8192 edit": {
+   "tag": "bf_edit_ff",
+   "file": "samples_B8192.jsonl.gz",
+   "acc": 0.51953125,
+   "acc_ci": [
+    0.45703125,
+    0.58203125
+   ],
+   "diff_vs_edit": 0.0390625,
+   "diff_vs_edit_ci": [
+    0.00390625,
+    0.07421875
+   ],
+   "diff_vs_base": 0.38671875,
+   "finished_share": 0.671875,
+   "mean_tokens": 11290.25390625,
+   "verdict_vs_edit": "reaches the edit",
+   "diff_vs_bf_base": 0.03515625,
+   "diff_vs_bf_base_ci": [
+    -0.015625,
+    0.0859375
+   ],
+   "stack_improves_edit": true
+  }
+ }
+}

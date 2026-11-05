@@ -1,0 +1,43 @@
+{
+ "model": "models/edits/bo_k256_a6",
+ "source": "vary_c0",
+ "tag": "bf_edit",
+ "set": "data/practice_select128.jsonl",
+ "preset": "qwen35_think",
+ "seed": 2,
+ "total_cap": 16384,
+ "forced_sentence": "\n\nConsidering the limited time by the user, I have to give the solution based on the thinking directly now.\n</think>\n\n",
+ "n_source_samples": 256,
+ "gen_seconds": 1424,
+ "budgets": {
+  "2048": {
+   "acc": 0.4921875,
+   "ok": 126,
+   "forced_share": 0.96875,
+   "mean_tokens": 9362.61328125
+  },
+  "4096": {
+   "acc": 0.47265625,
+   "ok": 121,
+   "forced_share": 0.93359375,
+   "mean_tokens": 10086.375
+  },
+  "8192": {
+   "acc": 0.46484375,
+   "ok": 119,
+   "forced_share": 0.58203125,
+   "mean_tokens": 11368.83203125
+  },
+  "12288": {
+   "acc": 0.4609375,
+   "ok": 118,
+   "forced_share": 0.33203125,
+   "mean_tokens": 11869.08984375
+  }
+ },
+ "max_num_seqs": 64,
+ "gpu_mem": 0.7,
+ "vllm_version": "0.32.0",
+ "gpu": "NVIDIA GeForce RTX 5070 Ti",
+ "torch_version": "2.13.0+cu130"
+}
