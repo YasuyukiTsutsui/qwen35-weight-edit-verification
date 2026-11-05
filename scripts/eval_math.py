@@ -34,6 +34,23 @@ def load_rows(name, n, seed=0):
     return rows
 
 
+def run_environment(a):
+    """Conditions of the run that were not recorded before 2026-11-05 (Issue #29): seed, batch limits, vLLM version, GPU."""
+    env = {"seed": a.seed, "max_num_seqs": a.max_num_seqs, "gpu_mem": a.gpu_mem}
+    try:
+        import vllm
+        env["vllm_version"] = vllm.__version__
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        import torch
+        env["gpu"] = torch.cuda.get_device_name(0)
+        env["torch_version"] = torch.__version__
+    except Exception:  # noqa: BLE001
+        pass
+    return env
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True)
@@ -104,7 +121,8 @@ def main():
     summ = {"model": a.model, "tag": a.tag, "set": a.rows_file or a.set, "n_problems": len(rows),
             "samples": a.samples, "max_tokens": a.max_tokens, "preset": a.preset, "thinking": a.thinking,
             "acc": ok / tot, "ok": ok, "total": tot, "cut_share": cut / tot, "cut_with_loop_tail": loops_cut,
-            "think_closed_share": closed / tot, "mean_tokens": sum(toks) / len(toks), "gen_seconds": round(gen_s)}
+            "think_closed_share": closed / tot, "mean_tokens": sum(toks) / len(toks), "gen_seconds": round(gen_s),
+            **run_environment(a)}
     json.dump(summ, open(os.path.join(out, "summary.json"), "w"), indent=1)
     print("SUMMARY", json.dumps(summ))
 
