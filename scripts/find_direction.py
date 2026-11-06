@@ -32,7 +32,7 @@ def load_model(path):
     from transformers import AutoConfig
     cfg = AutoConfig.from_pretrained(path)
     cls = getattr(transformers, cfg.architectures[0])
-    model = cls.from_pretrained(path, dtype=torch.bfloat16, device_map="cuda").eval()
+    model = cls.from_pretrained(path, dtype=getattr(torch, os.environ.get("WSP_DTYPE", "bfloat16")), device_map=os.environ.get("WSP_DEVICE", "cuda")).eval()
     for p in ("model.language_model", "model.text_model", "language_model.model", "model"):
         node = model
         for part in p.split("."):

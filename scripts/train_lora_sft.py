@@ -35,6 +35,9 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 EXIT_STOP = 75
+DEV = os.environ.get("WSP_DEVICE", "cuda")      # "cpu" only for the CPU test of the code path (scripts/test_lora_trainer_cpu.sh)
+if DEV == "cpu":
+    torch.backends.mkldnn.enabled = False            # oneDNN has no bf16 backward on some CPUs (avx2_vnni_2); the plain kernels are slow but exist
 SUFFIXES = ("mlp.gate_proj", "mlp.up_proj", "mlp.down_proj", "self_attn.q_proj", "self_attn.k_proj", "self_attn.v_proj", "self_attn.o_proj",
             "linear_attn.in_proj_qkv", "linear_attn.in_proj_z", "linear_attn.out_proj")
 
@@ -42,9 +45,9 @@ SUFFIXES = ("mlp.gate_proj", "mlp.up_proj", "mlp.down_proj", "self_attn.q_proj",
 class LoRA:
     def __init__(self, layer_idx, suffix, lin, r, alpha):
         self.layer, self.suffix, self.lin = layer_idx, suffix, lin
-        self.A = nn.Parameter(torch.empty(r, lin.in_features, device="cuda", dtype=torch.float32))
+        self.A = nn.Parameter(torch.empty(r, lin.in_features, device=DEV, dtype=torch.float32))
         nn.init.kaiming_uniform_(self.A, a=math.sqrt(5))
-        self.B = nn.Parameter(torch.zeros(lin.out_features, r, device="cuda", dtype=torch.float32))
+        self.B = nn.Parameter(torch.zeros(lin.out_features, r, device=DEV, dtype=torch.float32))
         self.s = alpha / r
         self.handle = lin.register_forward_hook(self.hook)
 
@@ -86,7 +89,7 @@ def ce_sum(h, lm_head, y, chunk=512):
 
 def seq_hidden(dec, rec):
     ids = rec["prompt_ids"] + rec["token_ids"]
-    x = torch.tensor([ids], device="cuda")
+    x = torch.tensor([ids], device=DEV)
     h = dec(input_ids=x, use_cache=False).last_hidden_state[0]
     P = len(rec["prompt_ids"])
     return h[P - 1:P - 1 + len(rec["token_ids"])], x[0, P:]
@@ -119,6 +122,8 @@ class Guard:
         self.base, self.hits = None, 0
 
     def other_mib(self):
+        if DEV != "cuda":
+            return 0.0
         free, total = torch.cuda.mem_get_info()
         return (total - free) / 2**20 - torch.cuda.memory_reserved() / 2**20
 
@@ -236,15 +241,17 @@ def main():
     lm_head = model.lm_head
 
     if a.mode == "bench":
-        torch.cuda.reset_peak_memory_stats()
+        if DEV == "cuda":
+            torch.cuda.reset_peak_memory_stats()
         for r in sorted(recs, key=lambda r: -len(r["token_ids"]))[:a.n]:
             t0 = time.time()
             h, y = seq_hidden(dec, r)
             loss = ce_sum(h, lm_head, y) / len(y)
             loss.backward()
-            torch.cuda.synchronize()
+            if DEV == "cuda":
+                torch.cuda.synchronize()
             dt = time.time() - t0
-            print(f"{len(y)} response tokens: {dt:.1f}s ({len(y) / dt:.0f} tok/s), peak mem {torch.cuda.max_memory_allocated() / 2**30:.1f} GiB, loss/token {float(loss):.3f}", flush=True)
+            print(f"{len(y)} response tokens: {dt:.1f}s ({len(y) / dt:.0f} tok/s), peak mem {(torch.cuda.max_memory_allocated() if DEV == "cuda" else 0) / 2**30:.1f} GiB, loss/token {float(loss):.3f}", flush=True)
         return
 
     # ---- train
@@ -261,7 +268,7 @@ def main():
     ck = os.path.join(a.out, "ckpt.pt")
     step0, log = 0, []
     if a.resume and os.path.exists(ck):
-        st = torch.load(ck, map_location="cuda")
+        st = torch.load(ck, map_location=DEV)
         for p, v in zip(params, st["params"]):
             p.data.copy_(v)
         opt.load_state_dict(st["opt"])
