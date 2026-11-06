@@ -25,8 +25,11 @@ run() {
   done
   echo "[$(date +%T)] $tag FAILED"; exit 1
 }
-echo "[$(date +%T)] queue_stage1_sample start"
-run t1_samples results/t1_samples/t1/summary.json \
-    bash scripts/drun.sh python3 scripts/eval_baselines.py --model $BASE --tag t1_samples --preset qwen35_nt_T03_p15 --thinking 0 --rows-file data/t1.jsonl --samples 8 \
-        --max-tokens 16384 --max-num-seqs 64 --gpu-mem 0.7 --seed 3 --save-tokens 1
+echo "[$(date +%T)] queue_stage1_sample start (4 chunks: the single 768-problem run held every token log-prob in RAM and was killed at 99% by the 12 GB container cap, twice)"
+PARTS=""
+for p in 0 1 2 3; do
+  run t1_samples_p$p results/t1_samples_p$p/t1_p$p/summary.json       bash scripts/drun.sh python3 scripts/eval_baselines.py --model $BASE --tag t1_samples_p$p --preset qwen35_nt_T03_p15 --thinking 0 --rows-file data/t1_p$p.jsonl --samples 8           --max-tokens 16384 --max-num-seqs 64 --gpu-mem 0.7 --seed 3 --save-tokens 1
+  PARTS="$PARTS results/t1_samples_p$p/t1_p$p"
+done
+python -I scripts/merge_sample_parts.py $PARTS --out results/t1_samples/t1 || { echo "[$(date +%T)] merge FAILED"; exit 1; }
 echo STAGE1SAMPLEDONE
