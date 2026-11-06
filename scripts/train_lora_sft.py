@@ -226,6 +226,7 @@ def main():
     model, dec, _ = load_model(a.model)
     for q in model.parameters():
         q.requires_grad_(False)
+    torch.manual_seed(a.seed)                      # LoRA A init (the seed-0 run M was trained before this line existed; its A is in ckpt.pt)
     mods = attach_lora(dec.layers, a.targets, a.rank, a.alpha)
     params = lora_params(mods)
     print(f"LoRA modules {len(mods)}, trainable parameters {sum(p.numel() for p in params) / 1e6:.2f} M (rank {a.rank}, alpha {a.alpha}, targets {a.targets})", flush=True)

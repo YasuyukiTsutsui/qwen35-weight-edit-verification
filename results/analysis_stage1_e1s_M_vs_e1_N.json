@@ -1,0 +1,88 @@
+{
+ "problems": 640,
+ "samples_per_problem": {
+  "e1s_M": 4,
+  "e1_N": 1
+ },
+ "arms": {
+  "e1s_M": {
+   "GSM8K": {
+    "pass1": 0.6125,
+    "finished_share": 0.98984375,
+    "acc_among_finished": 0.6187845303867403,
+    "mean_tokens": 1132.79375,
+    "maj_k": 0.6875,
+    "all_agree": 0.446875
+   },
+   "MATH": {
+    "pass1": 0.465625,
+    "finished_share": 0.80390625,
+    "acc_among_finished": 0.5792031098153547,
+    "mean_tokens": 5470.696875,
+    "maj_k": 0.578125,
+    "all_agree": 0.259375
+   },
+   "weighted": {
+    "pass1": 0.5390625,
+    "finished_share": 0.8968750000000001,
+    "acc_among_finished": 0.5989938201010475,
+    "mean_tokens": 3301.7453124999997,
+    "maj_k": 0.6328125,
+    "all_agree": 0.353125
+   }
+  },
+  "e1_N": {
+   "GSM8K": {
+    "pass1": 0.578125,
+    "finished_share": 0.99375,
+    "acc_among_finished": 0.5817610062893082,
+    "mean_tokens": 1701.271875,
+    "maj_k": 0.578125,
+    "all_agree": 1.0
+   },
+   "MATH": {
+    "pass1": 0.490625,
+    "finished_share": 0.784375,
+    "acc_among_finished": 0.6135458167330677,
+    "mean_tokens": 7218.7,
+    "maj_k": 0.490625,
+    "all_agree": 1.0
+   },
+   "weighted": {
+    "pass1": 0.534375,
+    "finished_share": 0.8890625000000001,
+    "acc_among_finished": 0.597653411511188,
+    "mean_tokens": 4459.9859375,
+    "maj_k": 0.534375,
+    "all_agree": 1.0
+   }
+  }
+ },
+ "comparisons": {
+  "e1s_M - e1_N": {
+   "diff": 0.004687500000000001,
+   "ci": [
+    -0.02734375,
+    0.036718749999999994
+   ],
+   "strata": {
+    "GSM8K": {
+     "diff": 0.034375,
+     "ci": [
+      -0.01015625,
+      0.08046875
+     ]
+    },
+    "MATH": {
+     "diff": -0.025,
+     "ci": [
+      -0.0703125,
+      0.01953125
+     ]
+    }
+   },
+   "verdict": "INCONCLUSIVE",
+   "primary": true
+  }
+ }
+}

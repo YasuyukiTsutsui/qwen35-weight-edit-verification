@@ -24,11 +24,14 @@ SEED, NBOOT = 20261105, 10000
 
 
 def load(tag):
-    p = os.path.join(ROOT, "results", tag, "e1", "samples.jsonl.gz")
+    """a tag, or 'tagA+tagB' = the samples of both pooled per problem (two training seeds of the same recipe)"""
     byp = {}
-    for l in gzip.open(p, "rt", encoding="utf-8"):
-        r = json.loads(l)
-        byp.setdefault(r["id"], []).append(r)
+    for t in tag.split("+"):
+        p = os.path.join(ROOT, "results", t, "e1", "samples.jsonl.gz")
+        for l in gzip.open(p, "rt", encoding="utf-8"):
+            r = json.loads(l)
+            r["k"] = r["k"] + 100 * tag.split("+").index(t)          # keeps the first tag's samples first (ties of a vote go to the first-seen answer)
+            byp.setdefault(r["id"], []).append(r)
     for rs in byp.values():
         rs.sort(key=lambda r: r["k"])
     return byp
@@ -77,17 +80,16 @@ def main():
     ids = sorted(arms[base])
     for t, a in arms.items():
         assert sorted(a) == ids, f"{t}: different problem set"
-        assert all(len(a[i]) == len(arms[base][i]) for i in ids), f"{t}: different number of samples"
     strata = {"GSM8K": [i for i in ids if i.startswith("gsm8k")], "MATH": [i for i in ids if not i.startswith("gsm8k")]}
     idx = {st: rng.integers(0, len(sel), size=(NBOOT, len(sel))) for st, sel in strata.items()}
-    res = {"problems": len(ids), "samples_per_problem": len(arms[base][ids[0]]), "arms": {}, "comparisons": {}}
-    print(f"E1: {len(ids)} problems ({len(strata['GSM8K'])} GSM8K + {len(strata['MATH'])} MATH), {res['samples_per_problem']} samples each; fixed weights 0.5 / 0.5")
+    res = {"problems": len(ids), "samples_per_problem": {t: len(a[ids[0]]) for t, a in arms.items()}, "arms": {}, "comparisons": {}}
+    print(f"E1: {len(ids)} problems ({len(strata['GSM8K'])} GSM8K + {len(strata['MATH'])} MATH); samples per problem {res['samples_per_problem']}; fixed weights 0.5 / 0.5")
     for t, a in arms.items():
         d = describe(a, ids, strata)
         res["arms"][t] = d
         w = d["weighted"]
         print(f"  {t:12s} GSM8K {100 * d['GSM8K']['pass1']:5.1f}%  MATH {100 * d['MATH']['pass1']:5.1f}%  weighted {100 * w['pass1']:5.1f}%  | finished {100 * w['finished_share']:5.1f}%  "
-              f"acc|finished {100 * w['acc_among_finished']:5.1f}%  tokens {w['mean_tokens']:6.0f}  | maj@{res['samples_per_problem']} {100 * w['maj_k']:5.1f}%  all-agree {100 * w['all_agree']:5.1f}%")
+              f"acc|finished {100 * w['acc_among_finished']:5.1f}%  tokens {w['mean_tokens']:6.0f}  | maj@k {100 * w['maj_k']:5.1f}%  all-agree {100 * w['all_agree']:5.1f}%")
     for t in [cand] + extra:
         d = {st: pass1(arms[t], sel) - pass1(arms[base], sel) for st, sel in ((s, [i for i in strata[s]]) for s in strata)}
         m = {st: d[st][idx[st]].mean(1) for st in d}
@@ -103,7 +105,7 @@ def main():
         res["comparisons"][f"{t} - {base}"] = {"diff": est, "ci": ci, "strata": per, "verdict": verdict, "primary": t == cand}
         print(f"  {t} - {base}: {100 * est:+.1f} [{100 * ci[0]:+.1f}, {100 * ci[1]:+.1f}]   GSM8K {100 * per['GSM8K']['diff']:+.1f} [{100 * per['GSM8K']['ci'][0]:+.1f}, {100 * per['GSM8K']['ci'][1]:+.1f}]"
               f"   MATH {100 * per['MATH']['diff']:+.1f} [{100 * per['MATH']['ci'][0]:+.1f}, {100 * per['MATH']['ci'][1]:+.1f}]   -> {verdict}{'' if t == cand else '   (exploratory)'}")
-    json.dump(res, open(os.path.join(ROOT, "results", f"analysis_stage1_{cand}.json"), "w"), indent=1)
+    json.dump(res, open(os.path.join(ROOT, "results", f"analysis_stage1_{cand}_vs_{base}.json"), "w"), indent=1)
 
 
 if __name__ == "__main__":
