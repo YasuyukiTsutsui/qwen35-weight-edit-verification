@@ -1,0 +1,50 @@
+{
+ "0.7": {
+  "preset": "qwen35_nt_T07_p15",
+  "tag": "bl_nt_k8",
+  "pass@1": 0.5126953125,
+  "maj@8": 0.65625,
+  "pass@8": 0.8125,
+  "headroom": 0.1435546875,
+  "headroom_ci": [
+   0.1025390625,
+   0.1865234375
+  ],
+  "cut_share": 0.1435546875,
+  "mean_tokens": 4874.3984375,
+  "n_samples": 1024
+ },
+ "0.5": {
+  "preset": "qwen35_nt_T05_p15",
+  "tag": "bl_s0_T05",
+  "pass@1": 0.513671875,
+  "maj@8": 0.65625,
+  "pass@8": 0.765625,
+  "headroom": 0.142578125,
+  "headroom_ci": [
+   0.0986328125,
+   0.1875
+  ],
+  "cut_share": 0.1318359375,
+  "mean_tokens": 4446.3388671875,
+  "n_samples": 1024
+ },
+ "0.3": {
+  "preset": "qwen35_nt_T03_p15",
+  "tag": "bl_s0_T03",
+  "pass@1": 0.521484375,
+  "maj@8": 0.671875,
+  "pass@8": 0.78125,
+  "headroom": 0.150390625,
+  "headroom_ci": [
+   0.1015625,
+   0.201171875
+  ],
+  "cut_share": 0.146484375,
+  "mean_tokens": 4066.384765625,
+  "n_samples": 1024
+ },
+ "T_star": "0.3",
+ "preset_star": "qwen35_nt_T03_p15",
+ "verdict": "PROCEED (design stage 1)"
+}

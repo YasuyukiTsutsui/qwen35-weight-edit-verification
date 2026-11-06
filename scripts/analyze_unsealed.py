@@ -1,6 +1,6 @@
 """Issue #31, steps A-D (all unsealed).  Host only; uses the saved 'correct' flags and predictions.
 
-    python -I scripts/analyze_unsealed.py [A|B|C|D|E|all]      -> results/analysis_unsealed.json
+    python -I scripts/analyze_unsealed.py [A|B|C|D|E|F|all]      -> results/analysis_unsealed.json
 
 Criteria fixed in Issue #31 before any run:
   A  published edit + budget forcing (4,096) - published edit  >= +3 pt with the lower end of the 95% interval > 0, on BOTH the 128 select and the 256 final_fresh problems.
@@ -228,9 +228,38 @@ def step_e():
     OUT["E"] = res
 
 
+def step_f():
+    """Issue #32 stage 0 follow-up (exploratory): E1 with the colder non-thinking sampler T* (e1_Nstar, seed 102) against N (T0.7), X' and R; fixed weights 0.5/0.5."""
+    rng = np.random.default_rng(SEED)
+    R, X, N, N2 = load("e1_R", "e1"), load("e1_Xp", "e1", "samples_B4096.jsonl.gz"), load("e1_N", "e1"), load("e1_Nstar", "e1")
+    if None in (R, X, N, N2):
+        return
+    ids = sorted(R)
+    sizes = {"GSM8K": sum(i.startswith("gsm8k") for i in ids), "MATH": sum(not i.startswith("gsm8k") for i in ids)}
+    idx = {st: rng.integers(0, n, size=(NBOOT, n)) for st, n in sizes.items()}
+    arms = {"R": R, "X'(4096)": X, "N (T0.7)": N, "N* (T*)": N2}
+    res = {"arms": {}, "comparisons": {}}
+    for name, a in arms.items():
+        accs = {st: float(pv(a, [i for i in ids if i.startswith("gsm8k") == (st == "GSM8K")]).mean()) for st in sizes}
+        fin = float(np.mean([r["finish"] == "stop" for i in ids for r in a[i]]))
+        tok = float(np.mean([r["tokens"] for i in ids for r in a[i]]))
+        res["arms"][name] = {"GSM8K": accs["GSM8K"], "MATH": accs["MATH"], "weighted": 0.5 * accs["GSM8K"] + 0.5 * accs["MATH"], "finished": fin, "mean_tokens": tok}
+        print(f"  {name:10s} GSM8K {100 * accs['GSM8K']:5.1f}%  MATH {100 * accs['MATH']:5.1f}%  weighted {100 * (accs['GSM8K'] + accs['MATH']) / 2:5.1f}%  finished {100 * fin:4.1f}%  tokens {tok:6.0f}")
+    print("F. E1, colder non-thinking sampler (fixed weights 0.5 / 0.5)")
+    for a_, b_ in (("N* (T*)", "N (T0.7)"), ("N* (T*)", "R"), ("N* (T*)", "X'(4096)")):
+        d = strat_diff(arms[a_], arms[b_], ids)
+        m = {st: d[st][idx[st]].mean(1) for st in d}
+        boots = 0.5 * m["GSM8K"] + 0.5 * m["MATH"]
+        est, ci = 0.5 * d["GSM8K"].mean() + 0.5 * d["MATH"].mean(), [float(x) for x in np.percentile(boots, [2.5, 97.5])]
+        ms = {st: boot(d[st], rng) for st in d}
+        res["comparisons"][f"{a_} - {b_}"] = {"diff": float(est), "ci": ci, "gsm8k": ms["GSM8K"], "math": ms["MATH"]}
+        print(f"  {a_} - {b_}: {pct(est, ci)}   GSM8K {pct(*ms['GSM8K'])}   MATH {pct(*ms['MATH'])}")
+    OUT["F"] = res
+
+
 if __name__ == "__main__":
     which = sys.argv[1] if len(sys.argv) > 1 else "all"
-    for key, fn in (("A", step_a), ("B", step_b), ("C", step_c), ("D", step_d), ("E", step_e)):
+    for key, fn in (("A", step_a), ("B", step_b), ("C", step_c), ("D", step_d), ("E", step_e), ("F", step_f)):
         if which in ("all", key):
             fn()
     json.dump(OUT, open(os.path.join(ROOT, "results", f"analysis_unsealed_{which}.json"), "w"), indent=1)
