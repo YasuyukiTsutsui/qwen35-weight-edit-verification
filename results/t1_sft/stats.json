@@ -1,0 +1,33 @@
+{
+ "M": {
+  "samples": 998,
+  "problems": 501,
+  "gsm8k_samples": 594,
+  "label_correct": 0.8927855711422845,
+  "mean_tokens": 858.3507014028056,
+  "total_tokens": 856634
+ },
+ "P": {
+  "samples": 998,
+  "problems": 501,
+  "gsm8k_samples": 594,
+  "label_correct": 0.7835671342685371,
+  "mean_tokens": 844.5981963927856,
+  "total_tokens": 842909
+ },
+ "G": {
+  "samples": 998,
+  "problems": 530,
+  "gsm8k_samples": 549,
+  "label_correct": 1.0,
+  "mean_tokens": 1044.8897795591183,
+  "total_tokens": 1042800
+ },
+ "all": {
+  "problems": 768,
+  "samples": 6144,
+  "eligible": 5089,
+  "cut_share": 0.111328125,
+  "pass@1": 0.5421549479166666
+ }
+}
