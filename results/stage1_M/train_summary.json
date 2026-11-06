@@ -1,0 +1,27 @@
+{
+ "args": {
+  "mode": "train",
+  "model": "models/Qwen3.5-0.8B",
+  "data": "results/t1_samples/t1",
+  "select": "results/t1_sft/M.json",
+  "targets": "all",
+  "rank": 16,
+  "alpha": 32.0,
+  "lr": 0.0001,
+  "epochs": 1,
+  "batch_seqs": 8,
+  "max_len": 8192,
+  "n": 3,
+  "seed": 0,
+  "out": "models/sft/M",
+  "resume": true,
+  "save_every": 900.0,
+  "stop_file": null,
+  "grow_mib": 1500.0,
+  "temp_max": 85.0
+ },
+ "steps": 125,
+ "sequences": 998,
+ "tokens": 856634,
+ "final_loss_per_token": 0.1439968047661804
+}
